@@ -338,7 +338,7 @@ export default function Home() {
   className="progress-ring"
   style={
     {
-      '--progress': overallPercent,
+      '--progress': roadmapPercent,
     } as CSSProperties
   }
 >
