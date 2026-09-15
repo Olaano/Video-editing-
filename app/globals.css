@@ -1066,3 +1066,115 @@ footer strong {
 @media (max-width: 600px) {
   .stage-meta { grid-template-columns: 1fr; }
 }
+
+/* Stage-end project briefs */
+.checkpoint {
+  display: block;
+}
+
+.checkpoint-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.checkpoint-projects {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+.checkpoint-project-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.checkpoint-project-heading span,
+.checkpoint-project-heading small,
+.checkpoint-project-top > span,
+.checkpoint-project-grid span,
+.checkpoint-project-resources > span {
+  font: 500 10px/1.2 'DM Mono', monospace;
+  letter-spacing: .1em;
+  color: var(--muted);
+}
+
+.checkpoint-project-heading small {
+  color: var(--dim);
+}
+
+.checkpoint-project {
+  padding: 18px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.checkpoint-project + .checkpoint-project {
+  margin-top: 12px;
+}
+
+.checkpoint-project-top {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.checkpoint-project-top strong {
+  font-size: 17px;
+}
+
+.checkpoint-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.checkpoint-project-grid > div {
+  padding: 13px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+}
+
+.checkpoint-project-grid p {
+  margin-top: 7px;
+}
+
+.checkpoint-project-resources {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.checkpoint-project-resources > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.checkpoint-project-resources a {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: var(--panel-2);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.checkpoint-project-resources a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .checkpoint-project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .checkpoint-project-heading {
+    display: grid;
+  }
+}
