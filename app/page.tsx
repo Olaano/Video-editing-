@@ -1,8 +1,9 @@
+
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
 import type { CSSProperties } from 'react'
-import { stages, allLessons } from '../data/roadmap'
+import { stages, allLessons, stageProjects } from '../data/roadmap'
 
 type Progress = {
   done: string[]
@@ -24,7 +25,6 @@ const stageGoals: Record<string, string> = {
   audio: 'Make dialogue, music, and sound work together cleanly.',
   visual: 'Develop visual judgment, rhythm, and consistent image treatment.',
   kdenlive: 'Turn editing knowledge into a confident Kdenlive workflow.',
-  projects: 'Create portfolio-ready work that proves the skills learned.',
   professional: 'Build a repeatable workflow for real client projects.',
   money: 'Turn editing ability into offers, clients, delivery, and income.',
 }
@@ -35,7 +35,6 @@ const stageOutputs: Record<string, string> = {
   audio: 'A clean, balanced edit with controlled dialogue and music.',
   visual: 'A polished edit with deliberate visual choices.',
   kdenlive: 'A complete Kdenlive workflow you can repeat on real projects.',
-  projects: 'Portfolio pieces that can be shown to potential clients.',
   professional: 'A client-ready process from brief to final delivery.',
   money: 'A practical path from portfolio to paid editing work.',
 }
@@ -285,7 +284,7 @@ export default function Home() {
 
   const scrollToCurrent = () => {
     if (!currentStage) {
-      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      document.getElementById('roadmap')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       return
     }
 
@@ -329,7 +328,6 @@ export default function Home() {
         <nav>
           <a href="#timeline">Timeline</a>
           <a href="#roadmap">Roadmap</a>
-          <a href="#projects">Projects</a>
           <a href="#money">Money</a>
         </nav>
 
@@ -809,7 +807,7 @@ export default function Home() {
                       </div>
 
                       <div className="checkpoint" id={`checkpoint-${stage.id}`}>
-                        <div>
+                        <div className="checkpoint-head">
                           <span className="checkpoint-label">
                             STAGE CHECKPOINT
                           </span>
@@ -818,16 +816,68 @@ export default function Home() {
                             {status === 'proved'
                               ? 'Stage proved ✓'
                               : allComplete
-                                ? 'You are ready to prove this stage.'
+                                ? 'Finish with the stage project.'
                                 : 'Finish every lesson first.'}
                           </h4>
 
                           <p>
                             {status === 'proved'
                               ? 'This stage is complete. The next stage is unlocked.'
-                              : 'Complete the lessons, then demonstrate the skill through the stage checkpoint.'}
+                              : 'The project below is the practical proof for this course. Complete it, then mark the checkpoint complete.'}
                           </p>
                         </div>
+
+                        {(stageProjects[stage.id] || []).length > 0 && (
+                          <div className="checkpoint-projects">
+                            <div className="checkpoint-project-heading">
+                              <span>STAGE PROJECT</span>
+                              <small>APPLY WHAT YOU JUST LEARNED</small>
+                            </div>
+
+                            {(stageProjects[stage.id] || []).map((project) => (
+                              <div className="checkpoint-project" key={project.id}>
+                                <div className="checkpoint-project-top">
+                                  <span>{project.tag}</span>
+                                  <strong>{project.title}</strong>
+                                </div>
+
+                                <div className="checkpoint-project-grid">
+                                  <div>
+                                    <span>WHY</span>
+                                    <p>{project.why}</p>
+                                  </div>
+                                  <div>
+                                    <span>BRIEF</span>
+                                    <p>{project.learn}</p>
+                                  </div>
+                                  <div>
+                                    <span>PRACTICE / PRODUCTION</span>
+                                    <p>{project.practice}</p>
+                                  </div>
+                                  <div>
+                                    <span>DELIVERABLE</span>
+                                    <p>{project.build}</p>
+                                  </div>
+                                  <div>
+                                    <span>PASS CONDITION</span>
+                                    <p>{project.criteria}</p>
+                                  </div>
+                                </div>
+
+                                <div className="checkpoint-project-resources">
+                                  <span>PROJECT RESOURCES</span>
+                                  <div>
+                                    {project.resources.map((resource) => (
+                                      <a href={resource.url} target="_blank" rel="noreferrer" key={`${project.id}-${resource.url}`}>
+                                        {resource.title} ↗
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
 
                         {status === 'proved' ? (
                           <div className="proved-badge">
@@ -856,43 +906,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="projects-section" id="projects">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">03 · PROJECTS</span>
-            <h2>Build proof, not just knowledge</h2>
-          </div>
-
-          <p>
-            Your Project Lab turns the lessons into portfolio
-            pieces you can actually show clients.
-          </p>
-        </div>
-
-        <div className="project-grid">
-          {stages
-            .find((stage) => stage.id === 'projects')
-            ?.lessons.map((lesson, index) => (
-              <a
-                className="project-card"
-                href="#roadmap"
-                key={lesson.id}
-              >
-                <span>
-                  PROJECT {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3>{lesson.title}</h3>
-                <p>{lesson.build}</p>
-                <strong>Open in roadmap →</strong>
-              </a>
-            ))}
-        </div>
-      </section>
-
       <section className="money-section" id="money">
         <div className="money-panel">
           <div>
-            <span className="eyebrow">04 · MONEY PATH</span>
+            <span className="eyebrow">03 · MONEY PATH</span>
             <h2>Turn editing into income.</h2>
             <p>
               The final stage connects your editing ability
