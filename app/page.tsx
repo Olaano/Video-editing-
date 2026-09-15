@@ -18,6 +18,28 @@ function getCheckpointId(stageId: string) {
   return `checkpoint-${stageId}`
 }
 
+const stageGoals: Record<string, string> = {
+  foundation: 'Build the core editing mindset and technical foundation.',
+  story: 'Learn to shape footage into clear, engaging stories.',
+  audio: 'Make dialogue, music, and sound work together cleanly.',
+  visual: 'Develop visual judgment, rhythm, and consistent image treatment.',
+  kdenlive: 'Turn editing knowledge into a confident Kdenlive workflow.',
+  projects: 'Create portfolio-ready work that proves the skills learned.',
+  professional: 'Build a repeatable workflow for real client projects.',
+  money: 'Turn editing ability into offers, clients, delivery, and income.',
+}
+
+const stageOutputs: Record<string, string> = {
+  foundation: 'A solid editing foundation and a repeatable practice habit.',
+  story: 'A short story-driven edit with intentional pacing.',
+  audio: 'A clean, balanced edit with controlled dialogue and music.',
+  visual: 'A polished edit with deliberate visual choices.',
+  kdenlive: 'A complete Kdenlive workflow you can repeat on real projects.',
+  projects: 'Portfolio pieces that can be shown to potential clients.',
+  professional: 'A client-ready process from brief to final delivery.',
+  money: 'A practical path from portfolio to paid editing work.',
+}
+
 function isYouTube(url: string) {
   return url.includes('youtube.com') || url.includes('youtu.be')
 }
@@ -262,18 +284,35 @@ export default function Home() {
   }, [query, activeStage, progress])
 
   const scrollToCurrent = () => {
-    const target =
-      currentStage?.id ||
-      stages[stages.length - 1]?.id
-
-    if (target) {
-      document
-        .getElementById(`stage-${target}`)
-        ?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        })
+    if (!currentStage) {
+      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
     }
+
+    const allComplete = currentStage.lessons.every((lesson) =>
+      progress.done.includes(lesson.id)
+    )
+
+    if (allComplete && currentStageStatus === 'ready') {
+      document.getElementById(`checkpoint-${currentStage.id}`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+      return
+    }
+
+    const nextLesson = currentStage.lessons.find(
+      (lesson) => !progress.done.includes(lesson.id)
+    )
+
+    const target = nextLesson
+      ? `lesson-${nextLesson.id}`
+      : `stage-${currentStage.id}`
+
+    document.getElementById(target)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    })
   }
 
   return (
@@ -362,6 +401,17 @@ export default function Home() {
               </strong>
               <span>STAGES PROVED</span>
             </div>
+          </div>
+
+          <div className="next-action">
+            <span>NEXT ACTION</span>
+            <strong>
+              {currentStage
+                ? currentStageStatus === 'ready'
+                  ? 'Complete the stage checkpoint'
+                  : currentStage.lessons.find((lesson) => !progress.done.includes(lesson.id))?.title || 'Stage complete'
+                : 'Roadmap complete — build your portfolio'}
+            </strong>
           </div>
         </div>
       </section>
@@ -543,6 +593,21 @@ export default function Home() {
                     </div>
                   </div>
 
+                  <div className="stage-meta">
+                    <div>
+                      <span>GOAL</span>
+                      <p>{stageGoals[stage.id] || stage.subtitle}</p>
+                    </div>
+                    <div>
+                      <span>OUTPUT</span>
+                      <p>{stageOutputs[stage.id] || 'A practical proof of the stage skill.'}</p>
+                    </div>
+                  </div>
+
+                  <div className="stage-progress-bar" aria-label={`${doneCount} of ${stage.lessons.length} lessons complete`}>
+                    <div style={{ width: `${stage.lessons.length ? (doneCount / stage.lessons.length) * 100 : 0}%` }} />
+                  </div>
+
                   {status === 'locked' ? (
                     <div className="locked-message">
                       <span>🔒</span>
@@ -568,6 +633,7 @@ export default function Home() {
                           return (
                             <div
                               className={`lesson ${isDone ? 'done' : ''} ${isOpen ? 'open' : ''}`}
+                              id={`lesson-${lesson.id}`}
                               key={lesson.id}
                             >
                               <button
@@ -742,7 +808,7 @@ export default function Home() {
                         })}
                       </div>
 
-                      <div className="checkpoint">
+                      <div className="checkpoint" id={`checkpoint-${stage.id}`}>
                         <div>
                           <span className="checkpoint-label">
                             STAGE CHECKPOINT
