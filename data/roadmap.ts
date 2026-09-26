@@ -1,302 +1,543 @@
-export type Resource={title:string;url:string;type:'Watch'|'Read'|'Practice';free?:boolean}
-export type Lesson={id:string;title:string;objective:string;keyConcepts:string[];recommendedResources:Resource[];practicalExercise:string}
-export type Checkpoint={brief:string;technicalConstraints:string[];freePracticeFootage:Resource[];selfGradingChecklist:string[]}
-export type Stage={id:string;stageNumber:number;title:string;subtitle:string;goal:string;output:string;lessons:Lesson[];checkpoint:Checkpoint}
-export const stages:Stage[]=[
-{
-id:'foundation',stageNumber:1,title:'The Editor’s Brain',subtitle:'Mindset, cuts, psychology, and pacing foundations',goal:'Build editorial judgment before relying on effects. Learn to decide what the audience should notice, feel, and understand.',output:'A 60-second edit whose choices can be explained shot-by-shot.',
-lessons:[
-{id:'f1',title:'Think like the editor',objective:'Translate raw footage into editorial decisions rather than simply assembling clips.',keyConcepts:['Every shot has a job: information, emotion, orientation, rhythm, or payoff.','Editing is selective; removing material is a creative decision.','The audience experiences the edit, not the timeline.','A strong editor can explain why a cut exists.'],recommendedResources:[
-{title:'How Does an Editor Think and Feel?',url:'https://www.youtube.com/watch?v=3Q3eITC01Fg',type:'Watch',free:true},
-{title:'This Guy Edits — Good Editors cut unnecessary dialog',url:'https://www.youtube.com/watch?v=6mvjS-sl39E',type:'Watch',free:true},
-{title:'The Book Every Editor Has to Read — Walter Murch',url:'https://www.youtube.com/watch?v=PKYeClvvlTw',type:'Watch',free:true},
-] as Resource[],practicalExercise:'15–20 min. Choose 8–10 unrelated clips. Write three possible stories using the same footage. Pick one, then assemble only the shots that support it. Remove two shots that feel “cool” but do not help the story. Export a 30–45s rough cut. Output: rough cut + one-sentence reason for every retained shot.'},
-{id:'f2',title:'Cut with a reason',objective:'Identify the information, emotion, movement, sound, or attention change that justifies a cut.',keyConcepts:['Cuts can change information, emotion, time, space, or attention.','Invisible cuts prioritize clarity; noticeable cuts can create emphasis.','The strongest cut often happens just before or after the obvious moment.','A cut should improve the audience experience, not demonstrate software skill.'],recommendedResources:[
-{title:'Cuts & Transitions 101 — RocketJump Film School',url:'https://www.youtube.com/watch?v=OAH0MoAv2CI',type:'Watch',free:true},
-{title:'6 Ways to Edit Any Scene — StudioBinder',url:'https://www.youtube.com/watch?v=FVR8zz8ci2k',type:'Watch',free:true},
-{title:'How Does an Editor Think and Feel?',url:'https://www.youtube.com/watch?v=3Q3eITC01Fg',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20 min. Pick a 30–60s scene with at least 8 cuts. Pause before each cut and predict why it occurs. Label each as information, emotion, movement, sound, time, space, or attention. Re-edit 20–30s of it so every cut has a written reason. Output: annotated cut list + re-edit.'},
-{id:'f3',title:'Read shot language',objective:'Use shot size, angle, movement, and composition to choose footage for a purpose.',keyConcepts:['Wide shots establish context; medium shots balance action and context; close-ups emphasize detail or emotion.','Reaction shots can change the meaning of another shot.','Movement can motivate a cut and guide attention.','Shot choice should serve the edit, not just imitate cinematic style.'],recommendedResources:[
-{title:'6 Ways to Edit Any Scene — StudioBinder',url:'https://www.youtube.com/watch?v=FVR8zz8ci2k',type:'Watch',free:true},
-{title:'Thomas Flight — visual storytelling & editing essays',url:'https://www.youtube.com/@ThomasFlight/videos',type:'Watch',free:true},
-{title:'How Does an Editor Think and Feel?',url:'https://www.youtube.com/watch?v=3Q3eITC01Fg',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20 min. Collect 20 shots from one video. Label shot size and its editorial purpose. Then choose five shots for one simple action: establish → action → detail → reaction → result. Output: shot log + five-shot micro-sequence.'},
-{id:'f4',title:'Protect continuity',objective:'Keep screen direction, eyelines, action, and spatial relationships understandable.',keyConcepts:['180-degree rule preserves screen direction.','Match-on-action hides cuts by continuing movement.','Eyelines tell viewers where people are looking.','Continuity can be broken deliberately, but accidental confusion is costly.'],recommendedResources:[
-{title:'6 Ways to Edit Any Scene — StudioBinder',url:'https://www.youtube.com/watch?v=FVR8zz8ci2k',type:'Watch',free:true},
-{title:'Thomas Flight — visual storytelling & editing essays',url:'https://www.youtube.com/@ThomasFlight/videos',type:'Watch',free:true},
-{title:'Free Sample Video Editing Tutorial — EditStock',url:'https://www.youtube.com/watch?v=rtDpihPaU-0',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20–25 min. Use a two-person dialogue or stage one. Build a master, two coverage shots, and a reaction. Keep the 180° line intact. Then make one intentionally wrong cut and repair it. Output: clean 30–45s scene + before/after continuity mistake.'},
-{id:'f5',title:'Control pacing',objective:'Change perceived energy by changing shot duration, pauses, information density, and rhythm.',keyConcepts:['Pacing is information timing, not simply fast cutting.','Longer holds can create reflection or tension.','Shorter shots can raise energy when the story supports it.','Pacing should follow the emotional curve of the scene.'],recommendedResources:[
-{title:'Hayden Hillier-Smith — editing & storytelling breakdowns',url:'https://www.youtube.com/@hilliersmith/videos',type:'Watch',free:true},
-{title:'How Does an Editor Think and Feel?',url:'https://www.youtube.com/watch?v=3Q3eITC01Fg',type:'Watch',free:true},
-{title:'Thomas Flight — visual storytelling & editing essays',url:'https://www.youtube.com/@ThomasFlight/videos',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20 min. Use the same 8–12 clips to make three 20s versions: calm, energetic, tense. Do not change the story or core footage. Only alter timing, order, pauses, and cut frequency. Output: 3 exports + 2 sentences describing what changed.'},
-{id:'f6',title:'Direct attention',objective:'Design the edit so the viewer notices the important thing at the intended moment.',keyConcepts:['Attention is shaped by contrast, timing, framing, movement, and reaction.','Withholding information can create curiosity; revealing it can create payoff.','Editors can redirect attention without adding effects.','The audience should not have to work to find the important information.'],recommendedResources:[
-{title:'NEVER UPLOAD Your First Edit — Here\'s Why',url:'https://www.youtube.com/watch?v=KOQG1Js-4Mg',type:'Watch',free:true},
-{title:'Thomas Flight — visual storytelling & editing essays',url:'https://www.youtube.com/@ThomasFlight/videos',type:'Watch',free:true},
-{title:'The Book Every Editor Has to Read — Walter Murch',url:'https://www.youtube.com/watch?v=PKYeClvvlTw',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20–25 min. Take a 30–45s sequence with competing visual information. Mark the intended focus at five moments. Reorder or remove shots so the focus arrives first. Show before/after to another person without explanation. Output: before/after + attention map.'},
-],checkpoint:{
-brief:'Client gives you 3 minutes of mixed footage from a simple interview/action scene. Deliver a coherent 60-second cut that demonstrates editorial judgment.',
-technicalConstraints:['Maximum final runtime: 60 seconds.','No visual transitions beyond straight cuts.','Maximum 2 cuts per spoken sentence unless the meaning clearly requires more.','Every cut must have a purpose: information, emotion, movement, sound, time, space, or attention.','No decorative effects; the edit must work with picture and natural audio.'],
-freePracticeFootage:[
-{title:'EditStock — The Hallway free sample',url:'https://editstock.com/products/the-hallway',type:'Practice',free:true},
-{title:'EditStock free editing practice footage',url:'https://editstock.com/collections/free-projects',type:'Practice',free:true},
-] as Resource[] as Resource[],selfGradingChecklist:['PASS — The story is understandable without explanation.','PASS — No accidental continuity/orientation errors.','PASS — Cuts feel motivated and pacing changes support the story.','PASS — Editor can explain the purpose of the 5 most important cuts.']},
-},
-{
-id:'story',stageNumber:2,title:'Storytelling',subtitle:'Hooks, retention, narrative arcs, tension, and platform-aware structure',goal:'Turn footage into a story that earns attention, creates expectation, and delivers payoff without relying on gimmicks.',output:'A finished 60–90s story edit with a deliberate hook, escalation, and payoff.',
-lessons:[
-{id:'s1',title:'Build the hook',objective:'Create an opening that establishes a question, promise, conflict, or curiosity fast.',keyConcepts:['The hook creates an information gap or clear reason to keep watching.','A hook should match the actual value delivered later.','Cold opens can outperform introductions when they remove setup friction.','The first seconds should establish context and direction, not random spectacle.'],recommendedResources:[
-{title:'Hayden Hillier-Smith — editing & storytelling breakdowns',url:'https://www.youtube.com/@hilliersmith/videos',type:'Watch',free:true},
-{title:'George Blackman — Making It / creator team & hiring insights',url:'https://www.georgeblackman.com/podcast',type:'Read',free:true},
-{title:'6 Ways to Edit Any Scene — StudioBinder',url:'https://www.youtube.com/watch?v=FVR8zz8ci2k',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20 min. Take a 2–3 minute talking-head or process clip. Create three 5–8s openings: direct promise, curiosity question, and cold-open payoff. Keep the body identical. Output: 3 hooks + one chosen version with a one-sentence rationale.'},
-{id:'s2',title:'Read retention shape',objective:'Use audience-retention thinking to identify where energy, clarity, or curiosity can drop.',keyConcepts:['Retention is a diagnostic signal, not a magic formula.','Drops often follow repetition, delayed payoff, confusion, or low-information sections.','A strong edit alternates setup, progress, and payoff rather than staying at maximum intensity.','You improve retention by improving the viewer experience, not by cutting randomly.'],recommendedResources:[
-{title:'NEVER UPLOAD Your First Edit — Here\'s Why',url:'https://www.youtube.com/watch?v=KOQG1Js-4Mg',type:'Watch',free:true},
-{title:'Hayden Hillier-Smith — Watch',url:'https://www.haydenhilliersmith.com/watch',type:'Read',free:true},
-{title:'George Blackman — Making It / creator team & hiring insights',url:'https://www.georgeblackman.com/podcast',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Watch a 3–5 minute creator video once without notes. On the second pass, mark 5 moments where attention likely rises or drops and explain why. Re-cut one 30–45s section to remove repetition or dead space. Output: annotated timeline + revised section.'},
-{id:'s3',title:'Shape the narrative arc',objective:'Arrange events into setup, escalation, turning point, payoff, and release.',keyConcepts:['Chronological order is not always the most engaging order.','Escalation means increasing stakes, complexity, or unanswered questions.','A payoff resolves or transforms the promise established earlier.','The edit should make the “before vs after” state easy to feel.'],recommendedResources:[
-{title:'How Does an Editor Think and Feel?',url:'https://www.youtube.com/watch?v=3Q3eITC01Fg',type:'Watch',free:true},
-{title:'Thomas Flight — visual storytelling & editing essays',url:'https://www.youtube.com/@ThomasFlight/videos',type:'Watch',free:true},
-{title:'Free Sample Video Editing Tutorial — EditStock',url:'https://www.youtube.com/watch?v=rtDpihPaU-0',type:'Watch',free:true},
-] as Resource[],practicalExercise:'25 min. Use EditStock The Hallway or The Stick Up. Write a five-beat outline before editing. Cut 45–60s that follows the beats even if the source is longer. Output: beat sheet + final sequence.'},
-{id:'s4',title:'Create tension and release',objective:'Control what the viewer knows, when they know it, and when you pay it off.',keyConcepts:['Tension often comes from a gap between question and answer.','Pacing can stretch anticipation before compressing the payoff.','Reaction shots can increase tension by showing knowledge before action.','Silence and withheld information can be stronger than constant action.'],recommendedResources:[
-{title:'Thomas Flight — visual storytelling & editing essays',url:'https://www.youtube.com/@ThomasFlight/videos',type:'Watch',free:true},
-{title:'Hayden Hillier-Smith — editing & storytelling breakdowns',url:'https://www.youtube.com/@hilliersmith/videos',type:'Watch',free:true},
-{title:'The Book Every Editor Has to Read — Walter Murch',url:'https://www.youtube.com/watch?v=PKYeClvvlTw',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20 min. Select one moment from The Hallway or your own footage. Build two 30s versions: one that reveals information early and one that withholds it. Compare the emotional effect. Output: both versions + note on the exact reveal point.'},
-{id:'s5',title:'Edit the talking head',objective:'Turn a raw speaker into a clear, paced YouTube segment without over-editing.',keyConcepts:['Build a strong radio cut before adding B-roll or graphics.','Remove repetition, filler, weak wording, and long pauses while preserving natural speech.','Use B-roll to add information or visual relief, not to hide a bad cut.','Captions and zooms should clarify or emphasize, not appear every second.'],recommendedResources:[
-{title:'NEVER UPLOAD Your First Edit — Here\'s Why',url:'https://www.youtube.com/watch?v=KOQG1Js-4Mg',type:'Watch',free:true},
-{title:'How to Edit Your Talking Head Videos — Denz Creates',url:'https://www.youtube.com/watch?v=6JcrJzLOe-g',type:'Watch',free:true},
-{title:'George Blackman — Making It / creator team & hiring insights',url:'https://www.georgeblackman.com/podcast',type:'Read',free:true},
-] as Resource[],practicalExercise:'25–30 min. Take 2–3 minutes of speech. Create a clean radio cut first. Then cover only 20–30% of the talking-head with purposeful B-roll. Add captions for key phrases only. Output: 60–90s segment + before/after comparison.'},
-{id:'s6',title:'Use B-roll as evidence',objective:'Choose B-roll that proves, expands, or emotionally supports what is being said.',keyConcepts:['B-roll can provide evidence, context, texture, or visual metaphor.','Shot duration should follow the speech idea being illustrated.','A B-roll shot should earn its place by adding something.','The best B-roll often changes the viewer’s understanding of a sentence.'],recommendedResources:[
-{title:'How to Edit Your Talking Head Videos — Denz Creates',url:'https://www.youtube.com/watch?v=6JcrJzLOe-g',type:'Watch',free:true},
-{title:'How I Edit Smooth Transitions! — Daniel Schiffer',url:'https://www.youtube.com/watch?v=5hJOdQ1zhX8',type:'Watch',free:true},
-{title:'Pexels free video library',url:'https://www.pexels.com/videos/',type:'Practice',free:true},
-] as Resource[],practicalExercise:'20 min. Take 30s of dialogue. Collect 6–10 B-roll shots. Map each shot to a spoken idea. Cover only the sections where the visual adds information. Remove two shots that are attractive but irrelevant. Output: B-roll map + 60s cut.'},
-{id:'s7',title:'Split for platform',objective:'Edit deliberately for horizontal long-form and vertical short-form instead of simply cropping one into the other.',keyConcepts:['Long-form needs structure, context, and sustained narrative payoff.','Short-form needs faster context, stronger early promise, and denser information.','Vertical framing changes safe areas and the usefulness of wide shots.','A short should feel authored for 9:16, not like a 16:9 export with the sides removed.'],recommendedResources:[
-{title:'Hayden Hillier-Smith — editing & storytelling breakdowns',url:'https://www.youtube.com/@hilliersmith/videos',type:'Watch',free:true},
-{title:'Hayden Hillier-Smith — Watch',url:'https://www.haydenhilliersmith.com/watch',type:'Read',free:true},
-{title:'Mixkit free vertical video',url:'https://mixkit.co/free-vertical-videos/',type:'Practice',free:true},
-] as Resource[],practicalExercise:'20–30 min. Take one 60–90s source. Build a 16:9 version with context and pacing, then a 9:16 30–45s version with a faster hook and reframed subject. Output: one horizontal edit + one vertical edit + a list of three deliberate differences.'},
-],checkpoint:{
-brief:'Client needs a 60-second YouTube/social story from 5 minutes of raw footage. The client wants a strong hook and a clear payoff, not a montage of random “cool” shots.',
-technicalConstraints:['Final runtime: 55–65 seconds.','Structure: Hook 0–5s, Build 5–45s, Payoff 45–60s.','No flashy transitions; use straight cuts, J/L cuts, B-roll, and timing.','Maximum 3 consecutive B-roll shots unless they form a purposeful montage.','The final 5 seconds must deliver or resolve the promise made in the hook.'],
-freePracticeFootage:[
-{title:'EditStock — The Hallway free sample',url:'https://editstock.com/products/the-hallway',type:'Practice',free:true},
-{title:'EditStock — The Stick Up free sample',url:'https://editstock.com/products/editstock-free-sample-bingo-night',type:'Practice',free:true},
-{title:'Pexels free video library',url:'https://www.pexels.com/videos/',type:'Practice',free:true},
-] as Resource[] as Resource[],selfGradingChecklist:['PASS — Hook establishes a clear reason to continue.','PASS — Middle section escalates or develops rather than repeats.','PASS — Payoff resolves the hook with visible or audible evidence.','PASS — No transition/effect is doing work that a better edit should do.']},
-},
-{
-id:'audio',stageNumber:3,title:'Audio',subtitle:'Dialogue isolation, EQ/compression, loudness, music ducking, SFX, and foley',goal:'Make sound clean enough for professional delivery and intentional enough to support story and retention.',output:'A 60–90s mixed sequence with clear dialogue, controlled music/SFX, and verified loudness.',
-lessons:[
-{id:'a1',title:'Clean dialogue first',objective:'Build an intelligible dialogue track before styling the rest of the soundtrack.',keyConcepts:['Clipping is distortion, not a volume problem.','High-pass filtering can remove unnecessary low-frequency rumble.','Noise reduction should improve speech without creating watery artifacts.','Consistency matters more than making one word extremely loud.'],recommendedResources:[
-{title:'Curtis Judd — dialogue & production sound lessons',url:'https://www.youtube.com/@curtisjudd/videos',type:'Watch',free:true},
-{title:'Curtis Judd — Sound for Video',url:'https://learn-light-and-sound.teachable.com/',type:'Read',free:true},
-{title:'Kdenlive Effects & Filters',url:'https://docs.kdenlive.org/en/effects_and_filters.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Choose a 30–60s voice clip. Identify the loudest peak and quietest phrase. Remove obvious rumble, apply conservative cleanup, then match the level across phrases. Output: before/after render and a short note naming each change.'},
-{id:'a2',title:'EQ and compression',objective:'Use basic EQ and dynamics to make dialogue clearer and more controlled.',keyConcepts:['EQ changes tonal balance; compression reduces level variation.','Cut problem frequencies before boosting presence.','Compression should reduce peaks without making speech lifeless.','Processing should be subtle enough to preserve natural voice texture.'],recommendedResources:[
-{title:'Curtis Judd — dialogue & production sound lessons',url:'https://www.youtube.com/@curtisjudd/videos',type:'Watch',free:true},
-{title:'Curtis Judd — Sound for Video',url:'https://learn-light-and-sound.teachable.com/',type:'Read',free:true},
-{title:'Kdenlive Effects & Filters',url:'https://docs.kdenlive.org/en/effects_and_filters.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–25 min. Duplicate a dialogue clip. On version A apply only EQ; on B EQ + gentle compression. Compare loudness-matched results. Output: two renders + settings screenshot. Pass: choose the version that improves intelligibility without obvious pumping.'},
-{id:'a3',title:'Hit a loudness target',objective:'Measure integrated loudness instead of guessing volume by ear.',keyConcepts:['Peak level and integrated loudness are different measurements.','A practical YouTube target is around -14 LUFS integrated; platform processing may vary.','True-peak headroom reduces clipping risk after encoding.','Always measure the final export, not just timeline meters.'],recommendedResources:[
-{title:'Curtis Judd — dialogue & production sound lessons',url:'https://www.youtube.com/@curtisjudd/videos',type:'Watch',free:true},
-{title:'Kdenlive Exporting',url:'https://docs.kdenlive.org/en/exporting.html',type:'Read',free:true},
-{title:'YouTube supported formats and encoding guidance',url:'https://support.google.com/youtube/answer/4603579',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Mix a 45–60s segment, export it, and measure integrated loudness with a loudness meter available in your workflow. Make one revision to approach -14 LUFS integrated without obvious clipping. Output: final file + measured loudness screenshot/note.'},
-{id:'a4',title:'Ducking that keeps speech dominant',objective:'Balance music against dialogue so the soundtrack adds emotion without masking words.',keyConcepts:['Dialogue is usually the primary information channel in talking-head content.','Volume automation/ducking is better than leaving music at one static level.','Music changes should follow speech density and emotional moments.','Silence can be part of the mix.'],recommendedResources:[
-{title:'Curtis Judd — dialogue & production sound lessons',url:'https://www.youtube.com/@curtisjudd/videos',type:'Watch',free:true},
-{title:'Hayden Hillier-Smith — editing & storytelling breakdowns',url:'https://www.youtube.com/@hilliersmith/videos',type:'Watch',free:true},
-{title:'Kdenlive Effects & Filters',url:'https://docs.kdenlive.org/en/effects_and_filters.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Create a 60s dialogue + music mix. Set music clearly below speech, then automate two dips around key sentences. Compare static vs ducked versions. Output: final mix + two annotated timestamps where ducking helped clarity.'},
-{id:'a5',title:'Design SFX and foley',objective:'Layer sound effects that reinforce movement, impact, and interface actions without becoming noise.',keyConcepts:['Foley recreates physical sounds; SFX can exaggerate emphasis.','Layer ambience, action, accent, and transition sounds at different roles.','Sync points should follow movement or story beats.','More sounds do not automatically create better sound design.'],recommendedResources:[
-{title:'Curtis Judd — dialogue & production sound lessons',url:'https://www.youtube.com/@curtisjudd/videos',type:'Watch',free:true},
-{title:'Sound Design Masterclass | Full Course | Basic to Advanced Tutorial',url:'https://www.youtube.com/watch?v=UOMMyu__FTM',type:'Watch',free:true},
-{title:'Kdenlive Effects & Filters',url:'https://docs.kdenlive.org/en/effects_and_filters.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'25 min. Take a silent 20–30s action sequence. Add ambience, 3–5 foley sounds, and 2 accent effects. Mute each layer one at a time to verify its purpose. Output: final sound-designed sequence + layer list.'},
-{id:'a6',title:'Build audio continuity',objective:'Use room tone, J/L cuts, fades, and ambience to make edits feel physically continuous.',keyConcepts:['Room tone hides background discontinuities between dialogue edits.','J-cuts and L-cuts can smooth picture changes with sound.','Short crossfades prevent clicks and abrupt changes.','Ambience should remain consistent with the location unless a shift is deliberate.'],recommendedResources:[
-{title:'Curtis Judd — dialogue & production sound lessons',url:'https://www.youtube.com/@curtisjudd/videos',type:'Watch',free:true},
-{title:'J-cuts and L-cuts — Adobe guide',url:'https://helpx.adobe.com/ie/premiere/desktop/edit-projects/trim-clips/perform-j-cuts-and-l-cuts.html',type:'Read',free:true},
-{title:'Kdenlive Effects & Filters',url:'https://docs.kdenlive.org/en/effects_and_filters.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–25 min. Cut three dialogue sections. Add room tone underneath. Create two J-cuts and two L-cuts. Crossfade every discontinuity. Listen once with eyes closed and mark any cut you can hear. Output: seamless 45–60s conversation.'},
-],checkpoint:{
-brief:'Client gives you a 90-second interview with inconsistent dialogue, background noise, music, and basic footage. Deliver a broadcast-ready-feeling web mix.',
-technicalConstraints:['Final runtime: 60–90 seconds.','Integrated loudness target: approximately -14 LUFS for the completed web export.','Dialogue must remain intelligible at normal listening volume.','Music must duck under speech; no section may allow music to mask important words.','Add at least 5 purposeful SFX/foley layers where the story benefits.'],
-freePracticeFootage:[
-{title:'EditStock — Steward of the Land free sample',url:'https://editstock.com/products/editstock-free-sample-built-by-life',type:'Practice',free:true},
-{title:'EditStock free editing practice footage',url:'https://editstock.com/collections/free-projects',type:'Practice',free:true},
-] as Resource[] as Resource[],selfGradingChecklist:['PASS — Dialogue is clear and consistent from start to finish.','PASS — Loudness is measured and the export is near the target without obvious clipping.','PASS — Music/SFX support rather than compete with speech.','PASS — Room tone/J/L cuts/fades prevent audible edit seams.']},
-},
-{
-id:'visual',stageNumber:4,title:'Visual Language & Motion Design',subtitle:'Keyframe dynamics, kinetic typography, document animation, depth, UI motion, and visual continuity',goal:'Move beyond static cutting into controlled motion design: animated text, documents, UI, masks, depth, and visual systems that serve story and retention.',output:'A 30–60s motion-led explainer built from graphics, typography, and animation rather than raw footage alone.',lessons:[
-{id:'v1',title:'Shape motion with keyframes',objective:'Create motion that feels intentional rather than mechanical by controlling timing, interpolation, easing, and overshoot.',keyConcepts:['Linear interpolation produces constant-speed motion and often feels mechanical.','Bezier easing redistributes speed between keyframes to create acceleration and deceleration.','Timing and spacing are separate decisions: duration changes how long a move takes, while easing changes how it travels.','Overshoot and spring-like motion should be used as emphasis, not as default decoration.'],recommendedResources:[
-{title:'How to Use the After Effects Graph Editor — Jake In Motion',url:'https://www.youtube.com/watch?v=7pOCtlrrE3Y',type:'Watch',free:true},
-{title:'Smooth Transitions in After Effects — Ben Marriott',url:'https://www.youtube.com/watch?v=H5wqO8Qj3R8',type:'Watch',free:true},
-{title:'Kdenlive Transform effect',url:'https://docs.kdenlive.org/en/effects_and_filters/video_effects/transform_distort_perspective/transform.html',type:'Read',free:true},
-{title:'Kdenlive Keyframe Interpolation — official tutorial index',url:'https://docs.kdenlive.org/en/getting_started/tutorials/video_tutorials.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Create a 3-second box animation. Version A uses linear motion. Version B uses ease-in/ease-out. Version C adds a small overshoot before settling. Keep the start/end positions identical. Output: 3 exports + one sentence explaining which version feels most intentional and why.'},
-{id:'v2',title:'Animate words for retention',objective:'Build kinetic typography that emphasizes meaning, rhythm, and hierarchy instead of decorating every word.',keyConcepts:['Animate only the words that carry the idea, emotion, or action.','Scale, position, opacity, tracking, and timing can create emphasis without complex graphics.','Typography needs hierarchy: primary word, supporting phrase, and background information.','Animation should follow speech or beat structure instead of firing continuously.'],recommendedResources:[
-{title:'5 Essential Type Animations in After Effects — Ben Marriott',url:'https://www.youtube.com/watch?v=jS1YMWkm4DQ',type:'Watch',free:true},
-{title:'Kinetic Typography — Mapal',url:'https://www.youtube.com/watch?v=qZAkANDloUE',type:'Watch',free:true},
-{title:'Jake In Motion — Type Jazz / animation concepts',url:'https://www.youtube.com/@jakeinmotion/videos',type:'Watch',free:true},
-{title:'Kinetic typography examples and principles',url:'https://www.creativebloq.com/typography/examples-kinetic-typography-11121304',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Take a 10–15s sentence. Display the sentence as text and animate only 3–5 emphasis words. Give each word a different entrance timing but keep one type family. Add a subtle scale/opacity accent. Output: 10–15s kinetic-caption clip.'},
-{id:'v3',title:'Animate documents and media',objective:'Turn static articles, screenshots, graphs, tweets, and documents into readable motion-driven visual evidence.',keyConcepts:['Document animation should guide the viewer toward the relevant information.','Digital highlighting can replace narration when the visual itself is the evidence.','2.5D depth is created by separating layers and moving them at different rates.','The animation should reveal information in the order the narration needs it.'],recommendedResources:[
-{title:'Kinetic Typography — Mapal',url:'https://www.youtube.com/watch?v=qZAkANDloUE',type:'Watch',free:true},
-{title:'5 Essential Type Animations — Ben Marriott',url:'https://www.youtube.com/watch?v=jS1YMWkm4DQ',type:'Watch',free:true},
-{title:'Ben Marriott — motion design tutorials',url:'https://www.youtube.com/@BenMarriott/videos',type:'Watch',free:true},
-{title:'Kdenlive Composite and Transform',url:'https://docs.kdenlive.org/en/compositing/compositions/composite_and_transform.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–25 min. Pick one public article screenshot or document page. Create a 12–15s sequence: zoom into the page, pan to one key fact, animate a highlighter line over that fact, then pull back. Add one layered foreground/background movement for depth. Output: one explain-by-document clip.'},
-{id:'v4',title:'Create depth with masks and parallax',objective:'Separate a subject or object from its background and combine it with text or graphics so the scene gains visual depth.',keyConcepts:['Masking separates visual layers so elements can pass in front of or behind each other.','Parallax comes from different layers moving at different speeds or scales.','Edges must remain believable; bad masks become more visible when animated.','Depth should reinforce focus and hierarchy rather than become a gimmick.'],recommendedResources:[
-{title:'Jake In Motion — animation and masking tutorials',url:'https://www.youtube.com/@jakeinmotion/videos',type:'Watch',free:true},
-{title:'Ben Marriott — masks and motion design',url:'https://www.youtube.com/@BenMarriott/videos',type:'Watch',free:true},
-{title:'Kdenlive compositing and masks',url:'https://docs.kdenlive.org/en/compositing.html',type:'Read',free:true},
-{title:'Kdenlive Object Mask / Rotoscoping tutorials',url:'https://docs.kdenlive.org/en/getting_started/tutorials/video_tutorials.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–30 min. Isolate a person or object from a still image or short clip. Put a large title behind the subject. Add a slow 3-layer parallax move: background 100%, subject 108%, foreground 115%. Feather the mask only enough to avoid a hard edge. Output: 5–8s depth composition.'},
-{id:'v5',title:'Animate UI and device mockups',objective:'Turn screen recordings or interface screenshots into believable product-demo motion for SaaS, apps, and tech content.',keyConcepts:['The viewer must understand what was clicked, changed, or demonstrated.','Punch-ins should follow the cursor or important UI state.','Device mockups need perspective, crop, scale, and shadow consistency.','Motion should clarify interaction flow instead of making the interface harder to read.'],recommendedResources:[
-{title:'Jake In Motion — motion design workflow and animation',url:'https://www.youtube.com/@jakeinmotion/videos',type:'Watch',free:true},
-{title:'Ben Marriott — motion design tutorials',url:'https://www.youtube.com/@BenMarriott/videos',type:'Watch',free:true},
-{title:'Kdenlive Transform effect',url:'https://docs.kdenlive.org/en/effects_and_filters/video_effects/transform_distort_perspective/transform.html',type:'Read',free:true},
-{title:'Kdenlive Composite and Transform',url:'https://docs.kdenlive.org/en/compositing/compositions/composite_and_transform.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Take a 10s screen recording. Add a fake cursor or pointer, one 120% punch-in to the key feature, and one device-frame/mockup composition using a transparent PNG/SVG. Animate the move with easing. Output: 10–15s SaaS/app demo segment.'},
-{id:'v6',title:'Unify motion with color and typography',objective:'Combine motion, color, typography, and footage into one visual system that looks intentional across a complete edit.',keyConcepts:['Motion style includes timing, easing, type behavior, spacing, and graphic shape language.','Color should connect the graphics with the graded footage.','Repeated design rules create brand consistency.','The final visual system should survive across 16:9 and 9:16 without becoming cramped.'],recommendedResources:[
-{title:'How to Edit Videos Like an Artist, Not a Technician — Hayden Hillier-Smith',url:'https://www.youtube.com/watch?v=XIVSa3wo0JU',type:'Watch',free:true},
-{title:'5 Essential Type Animations — Ben Marriott',url:'https://www.youtube.com/watch?v=jS1YMWkm4DQ',type:'Watch',free:true},
-{title:'Cullen Kelly — color grading & visual consistency',url:'https://www.youtube.com/@CullenKelly/videos',type:'Watch',free:true},
-{title:'Kdenlive Effects & Filters',url:'https://docs.kdenlive.org/en/effects_and_filters.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–30 min. Take one short edit and create a mini motion style guide: one font family, two weights, three colors, one easing style, one caption entrance, one callout style. Apply the system to 20–30s of content. Output: 20–30s branded motion segment + one-page style note.'},
-],checkpoint:{
-brief:'Client gives you a dry 30-second voiceover explaining a financial or tech concept. Deliver a dynamic explainer that communicates the idea entirely through motion graphics and sound.',
-technicalConstraints:['Final runtime: 25–35 seconds.','Use 0 raw camera footage in the final edit.','Use kinetic typography for at least 3 key phrases.','Animate at least one chart, document, or visual evidence element.','Add at least 3 sound-matched motion accents (whoosh, click, pop, or impact) at intentional moments.','Use one consistent type family and restrained color system.'],
-freePracticeFootage:[
-{title:'Cinestudy — free EDIT THIS raw footage',url:'https://cinestudy.org/2019/02/15/interactive-project-editing-a-sequence/',type:'Practice',free:true},
-{title:'EditStock — free editing practice footage',url:'https://editstock.com/collections/free-projects',type:'Practice',free:true},
-] as Resource[],selfGradingChecklist:['PASS — The voiceover can be understood visually without raw camera footage.','PASS — Motion uses deliberate easing/timing rather than mostly linear movement.','PASS — Text, chart/document animation, and sound accents reinforce the narration.','PASS — The visual system is consistent enough to look like one branded production.']},
-},
-{
-id:'kdenlive',stageNumber:5,title:'Kdenlive & Performance',subtitle:'Execute motion efficiently with Kdenlive, Glaxnimate, asset preparation, proxies, nesting, and rendering',goal:'Convert motion-design principles into a practical low-resource Kdenlive workflow using native keyframes, compositing, Glaxnimate, and prepared graphic assets.',output:'A reusable Kdenlive motion workflow that runs reliably on constrained hardware and exports clean client deliverables.',lessons:[
-{id:'k1',title:'Build a fast Kdenlive motion setup',objective:'Configure Kdenlive so motion work is organized, predictable, and easy to repeat.',keyConcepts:['Project profile should match the final delivery before animation begins.','Separate footage, audio, graphics, animation, project files, and exports.','Create reusable defaults before starting a client edit.','The goal is predictable execution, not memorizing every feature.'],recommendedResources:[
-{title:'Learn Kdenlive in 30 Minutes — Nuxttux Creative Studio',url:'https://www.youtube.com/watch?v=zYD0b8LpiQA',type:'Watch',free:true},
-{title:'Kdenlive Essentials — Nuxttux Creative',url:'https://www.skillshare.com/en/classes/kdenlive-essentials-cut-edit-and-enhance-videos-fast/374088550',type:'Read',free:true},
-{title:'Kdenlive Quick Start',url:'https://docs.kdenlive.org/en/getting_started/quickstart.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Create a 1080p project with folders for Footage, Audio, Graphics, Animation, Project, and Exports. Import 5 clips and 3 graphic assets. Save a reusable project template or starter folder. Output: clean project skeleton ready for a motion edit.'},
-{id:'k2',title:'Cut and animate from the keyboard',objective:'Use keyboard-driven editing so repeated cut/trim actions do not depend on constant mouse movement.',keyConcepts:['Shortcut fluency reduces mechanical overhead.','Ripple/spacer tools prevent unnecessary timeline repair.','Markers can turn a narrated edit into a motion timing map.','Keyboard speed should increase decision quality, not just raw speed.'],recommendedResources:[
-{title:'Nuxttux Creative Studio — Kdenlive tutorial series',url:'https://www.youtube.com/playlist?list=PL9Ry3nn8UG5b7beUdAWjkMTQLgcr04Awk',type:'Watch',free:true},
-{title:'Kdenlive keyboard shortcuts reference',url:'https://docs.kdenlive.org/en/user_interface/menu_reference.html',type:'Read',free:true},
-{title:'25+ Kdenlive Tips & Tricks — Nuxttux',url:'https://discuss.kde.org/t/25-kdelive-tips-and-trick-for-a-better-workflow-video/32929',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–25 min. Rebuild a 30s talking-head rough cut using keyboard shortcuts for most selects, cuts, and timeline navigation. Add 5 markers where motion or graphics will happen. Time yourself once, then repeat and try to reduce mechanical pauses.'},
-{id:'k3',title:'Animate with Transform and Composite',objective:'Execute the Stage 04 motion principles directly in Kdenlive using keyframed Transform and compositing tools.',keyConcepts:['Kdenlive Transform supports keyframed position, scale, rotation, and related transforms.','Composite and Transform can combine compositing with keyframed motion.','Keyframes should be placed at meaningful beats, not every few frames.','Use easing and restrained movement to make simple graphics feel intentional.'],recommendedResources:[
-{title:'Kdenlive Transform — official manual',url:'https://docs.kdenlive.org/en/effects_and_filters/video_effects/transform_distort_perspective/transform.html',type:'Read',free:true},
-{title:'Kdenlive Composite and Transform — official manual',url:'https://docs.kdenlive.org/en/compositing/compositions/composite_and_transform.html',type:'Read',free:true},
-{title:'Keyframe Interpolation — Kdenlive tutorial index',url:'https://docs.kdenlive.org/en/getting_started/tutorials/video_tutorials.html',type:'Read',free:true},
-{title:'How to Use the After Effects Graph Editor — Jake In Motion',url:'https://www.youtube.com/watch?v=7pOCtlrrE3Y',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20 min. Build three Kdenlive animations: a 5% push-in, a side-slide callout, and an opacity reveal. Use at least two keyframes each and manually shape their timing. Output: one 10s motion demo with all three.'},
-{id:'k4',title:'Bring vector animation in with Glaxnimate',objective:'Create lightweight vector animations and callouts in Glaxnimate, then integrate them into Kdenlive.',keyConcepts:['Kdenlive has direct Glaxnimate integration for vector graphics and animation.','Glaxnimate can create shapes, paths, animated callouts, maps, and Lottie/RAWr-style assets.','Keep vector designs simple enough for your machine and delivery target.','Motion graphics can be built as reusable assets rather than rebuilt every edit.'],recommendedResources:[
-{title:'Kdenlive + Glaxnimate integration — official manual',url:'https://docs.kdenlive.org/en/titles_and_graphics/graphics_and_animations/glaxnimate.html',type:'Read',free:true},
-{title:'Create Animation with Glaxnimate — Kdenlive',url:'https://docs.kdenlive.org/en/project_and_asset_management/project_bin/animation.html',type:'Read',free:true},
-{title:'Kdenlive video tutorials — Glaxnimate/animation sources',url:'https://docs.kdenlive.org/en/getting_started/tutorials/video_tutorials.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–30 min. Create one vector callout in Glaxnimate: circle, arrow, or route line. Animate it over 3–5 seconds, save the animation, import it into Kdenlive, and composite it over a clip. Output: reusable `.rawr`/Lottie-style callout asset + 5s demo.'},
-{id:'k5',title:'Prepare SVG/PNG assets for motion',objective:'Create lightweight transparent graphic assets that can be animated cleanly inside Kdenlive.',keyConcepts:['Separate artwork from animation so one asset can be reused.','SVG is useful for scalable simple vector graphics; transparent PNG works for raster elements.','Name assets by function and version.','Avoid oversized source images that create unnecessary preview/render cost.'],recommendedResources:[
-{title:'Inkscape beginner tutorials',url:'https://inkscape.org/learn/tutorials/',type:'Read',free:true},
-{title:'Figma Learn — design basics',url:'https://help.figma.com/hc/en-us/categories/360002042553-Learn',type:'Read',free:true},
-{title:'Kdenlive Compositing and alpha channels',url:'https://docs.kdenlive.org/en/compositing.html',type:'Read',free:true},
-{title:'Ben Marriott — motion asset workflow inspiration',url:'https://www.youtube.com/@BenMarriott/videos',type:'Watch',free:true},
-] as Resource[],practicalExercise:'20 min. Make three assets for a tech video: a device frame, a highlight badge, and a small arrow/callout. Export transparent SVG/PNG versions, name them consistently, import them into Kdenlive, and animate one asset. Output: mini asset pack + 5–8s demo.'},
-{id:'k6',title:'Optimize, nest, proxy, and render motion-heavy edits',objective:'Keep graphics-heavy projects workable on low-end hardware while preserving editability and clean final delivery.',keyConcepts:['Proxy clips reduce editing load for high-resolution source media.','Nested sequences/sequence clips can isolate repeated or complex sections.','Preview/render strategy is a workflow decision, not a sign of weak hardware.','Final exports must use the original-quality pipeline where appropriate, not accidentally deliver proxy media.'],recommendedResources:[
-{title:'Kdenlive Proxy Settings — official manual',url:'https://docs.kdenlive.org/en/project_and_asset_management/project_settings/proxy_settings.html',type:'Read',free:true},
-{title:'Kdenlive Video Tutorials — Nuxttux and Arkengheist',url:'https://docs.kdenlive.org/en/getting_started/tutorials/video_tutorials.html',type:'Read',free:true},
-{title:'25+ Kdenlive Tips & Tricks — Nuxttux',url:'https://discuss.kde.org/t/25-kdelive-tips-and-trick-for-a-better-workflow-video/32929',type:'Read',free:true},
-{title:'Kdenlive Exporting',url:'https://docs.kdenlive.org/en/exporting.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'25–30 min. Import a high-resolution clip and enable proxies. Build a 20–30s motion section containing at least 3 graphics. Place the motion section in a nested/sequence structure where practical. Compare playback before/after proxies and render a test export. Output: performance notes + working motion section + test render.'},
-],checkpoint:{
-brief:'You are editing a 60-second SaaS explainer on a low-end machine. The client expects a clean Kdenlive project plus a final web delivery.',
-technicalConstraints:['Use proxy media for high-resolution source footage during editing.','Use keyboard-driven cuts/trims for the core edit where practical.','Use at least one Kdenlive Transform/keyframed motion treatment.','Use at least one vector/graphic animation from Glaxnimate or prepared SVG/PNG assets.','Use one nested/sequence section for a repeated or complex motion block.','Deliver a clean 16:9 master and a short 9:16 social test export.'],
-freePracticeFootage:[
-{title:'EditStock — free editing practice footage',url:'https://editstock.com/collections/free-projects',type:'Practice',free:true},
-{title:'Cinestudy — free EDIT THIS raw footage',url:'https://cinestudy.org/2019/02/15/interactive-project-editing-a-sequence/',type:'Practice',free:true},
-] as Resource[],selfGradingChecklist:['PASS — The project remains editable and organized after proxies/nesting are used.','PASS — At least two motion techniques are visibly controlled and not purely linear defaults.','PASS — Final exports preserve correct aspect ratio, sync, graphics, and audio.','PASS — Another editor could locate source media, graphics, animation assets, project file, and exports.']},
-},
-{
-id:'workflow',stageNumber:6,title:'Professional Workflow & Speed',subtitle:'Folder hierarchies, motion asset systems, libraries, versioning, delivery, and client handoff',goal:'Build a fast, repeatable professional system that keeps motion assets, footage, audio, versions, and client deliverables under control.',output:'A client-ready project package with reusable motion assets, organized libraries, version history, and clean delivery.',lessons:[
-{id:'w1',title:'Build the client folder system',objective:'Create a project structure that keeps source, working files, graphics, animation, caches, exports, and archives separated.',keyConcepts:['Number folders by workflow order.','Separate source assets from generated/cache material.','Keep motion assets reusable instead of burying them in one project.','A clean folder system makes handoff and backup easier.'],recommendedResources:[
-{title:'How Professional Hollywood Editors Set Up a Timeline — Film Editing Pro',url:'https://www.filmeditingpro.com/tutorial-how-professional-hollywood-editors-set-up-a-timeline/',type:'Read',free:true},
-{title:'Kdenlive Project Bin organization',url:'https://docs.kdenlive.org/en/project_and_asset_management/project_bin.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Create `01_Footage`, `02_Audio`, `03_Graphics`, `04_Animation`, `05_Project`, `06_Exports`, `07_Deliveries`, `08_Archive`. Move a sample project into the structure and create a README describing what belongs in each folder.'},
-{id:'w2',title:'Build reusable motion assets',objective:'Turn repeated captions, callouts, lower thirds, device frames, and title treatments into a personal asset library.',keyConcepts:['Templates create speed without forcing every client into the same style.','Version reusable assets when design changes.','Store source artwork separately from rendered variants.','Asset libraries should be searchable by function and format.'],recommendedResources:[
-{title:'Ben Marriott — motion design tutorials',url:'https://www.youtube.com/@BenMarriott/videos',type:'Watch',free:true},
-{title:'Jake In Motion — efficient motion workflow',url:'https://www.youtube.com/@jakeinmotion/videos',type:'Watch',free:true},
-{title:'Kdenlive Glaxnimate integration',url:'https://docs.kdenlive.org/en/titles_and_graphics/graphics_and_animations/glaxnimate.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–25 min. Create a mini library containing 3 caption entrances, 2 callouts, 1 lower third, 1 device frame, and 1 arrow/highlighter asset. Name each by function, format, and version. Use at least two assets in a real 15s edit.'},
-{id:'w3',title:'Organize B-roll and SFX libraries',objective:'Reduce search time by building a repeatable system for footage, music, ambience, whooshes, pops, and foley.',keyConcepts:['Libraries are useful only when naming and categorization stay consistent.','Tag assets by type, mood, intensity, and use case.','Preview libraries before adding them to every project.','Do not let “more assets” become a substitute for better editorial decisions.'],recommendedResources:[
-{title:'Abhay PS Rajawat — Complete Guide to Sound Design Any Video Like a PRO',url:'https://www.youtube.com/watch?v=FjpnOstqBvs',type:'Watch',free:true},
-{title:'This Guy Edits — story and editorial judgment',url:'https://thisguyedits.com/',type:'Read',free:true},
-{title:'Kdenlive Project Bin',url:'https://docs.kdenlive.org/en/project_and_asset_management/project_bin.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Sort 20 sound effects and 15 B-roll clips into a library with labels such as `SFX_Whoosh`, `SFX_Click`, `Ambience`, `BROLL_Tech`, `BROLL_People`. Add one note about where each category is useful. Then build one 20s edit using the library.'},
-{id:'w4',title:'Version work like a professional',objective:'Track revisions so every client-visible state is recoverable and explainable.',keyConcepts:['Use version numbers for meaningful client-visible changes.','Keep changelogs short and factual.','Never overwrite a version that may need to be compared later.','Name exports so the client knows what each file is.'],recommendedResources:[
-{title:'NEVER UPLOAD Your First Edit — Hayden Hillier-Smith',url:'https://www.youtube.com/watch?v=KOQG1Js-4Mg',type:'Watch',free:true},
-{title:'How to Perfect an Edit with Finishing Touches — Film Editing Pro',url:'https://www.filmeditingpro.com/how-to-perfect-an-edit-with-finishing-touches/',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Take one 45s edit through `v1.0 → v1.1 → v2.0`. Change at least three client-visible things. Record each change in a changelog. Export every version without overwriting previous files.'},
-{id:'w5',title:'Deliver codecs and platform versions',objective:'Create masters and platform copies that match the client’s intended use and survive technical checks.',keyConcepts:['Codec, container, resolution, frame rate, and bitrate are separate decisions.','Masters and delivery copies may have different technical goals.','Vertical and horizontal versions may need different framing and text placement.','The final file must be watched after export, not assumed correct because rendering succeeded.'],recommendedResources:[
-{title:'Kdenlive Exporting — official manual',url:'https://docs.kdenlive.org/en/exporting.html',type:'Read',free:true},
-{title:'Supported YouTube video formats',url:'https://support.google.com/youtube/answer/4603579',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Export one 16:9 master and one 9:16 social version. Verify duration, resolution, frame rate, audio sync, text-safe placement, and playback. Write a delivery note explaining intended use of each file.'},
-{id:'w6',title:'Run a clean client handoff',objective:'Package the project so the client receives the right deliverables and another editor can understand the project later.',keyConcepts:['The handoff should answer what was delivered, what version it is, and what files matter.','README/changelog files reduce follow-up questions.','Archive the project deliberately instead of copying every cache file.','Reliability after delivery contributes to client trust and repeat work.'],recommendedResources:[
-{title:'How To Secure Your Video Editor Job With Good Client Chemistry — Film Editing Pro',url:'https://www.filmeditingpro.com/the-3-types-of-editors/',type:'Read',free:true},
-{title:'Kdenlive Archiving Projects — tips and tricks',url:'https://docs.kdenlive.org/en/tips_and_tricks/useful_info/kdenlive_transitions.html',type:'Read',free:true},
-{title:'Kdenlive Exporting',url:'https://docs.kdenlive.org/en/exporting.html',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–25 min. Create a delivery package containing v2.0 export, master, social version, README, changelog, and archive note. Open the package from another folder and verify that everything described is actually there.'},
-],checkpoint:{
-brief:'A creator sends you a completed motion-heavy edit with revision notes. Your job is to turn the working project into a clean, reproducible client package.',
-technicalConstraints:['Use numbered folders from source through archive.','Include at least one reusable motion-asset folder separate from client source footage.','Create v1.0 and v1.1 without overwriting v1.0.','Include README and changelog.','Deliver one master plus one platform version.','Remove unnecessary caches/temp files from the handoff package.'],
-freePracticeFootage:[
-{title:'EditStock — free editing practice footage',url:'https://editstock.com/collections/free-projects',type:'Practice',free:true},
-{title:'Cinestudy — free EDIT THIS raw footage',url:'https://cinestudy.org/2019/02/15/interactive-project-editing-a-sequence/',type:'Practice',free:true},
-] as Resource[],selfGradingChecklist:['PASS — Project organization is understandable without verbal explanation.','PASS — Motion assets are reusable and clearly separated/versioned.','PASS — Version history and delivery files are unambiguous.','PASS — A clean handoff folder contains no accidental cache/temp clutter.']},
-},
-{
-id:'money',stageNumber:7,title:'Money Path',subtitle:'Sell motion-led editing: short-form retention, explainers, audits, retainers, and outreach',goal:'Turn the combined editing and motion skillset into a specific commercial offer, credible proof, targeted outreach, and repeatable client relationship.',output:'A motion-focused service offer, portfolio proof, 30-second audit spec, outreach campaign, and retainer/scope system.',lessons:[
-{id:'m1',title:'Choose a high-value motion offer',objective:'Package a clear service around a buyer problem rather than selling generic “video editing.”',keyConcepts:['An offer names the buyer, deliverable, format, turnaround, and scope.','Motion can differentiate a basic edit by adding information design and emphasis.','Pick a niche you can demonstrate repeatedly: short-form retention, YouTube explainers, SaaS/product demos, or creator content.','Commercial value comes from solving a content problem, not from adding effects indiscriminately.'],recommendedResources:[
-{title:'Hayden Hillier-Smith — Watch / editing education',url:'https://www.haydenhilliersmith.com/watch',type:'Read',free:true},
-{title:'This Guy Edits — storytelling and creative editing',url:'https://thisguyedits.com/about/',type:'Read',free:true},
-{title:'Film Editing Pro — finding work',url:'https://www.filmeditingpro.com/the-editors-guide-to-demo-reels-finding-work/',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Write three offers: (A) 8 kinetic short-form clips/month, (B) one 4–8 minute YouTube explainer, (C) one SaaS/product demo pack. For each specify buyer, deliverables, turnaround, revisions, and the problem solved. Choose one to test.'},
-{id:'m2',title:'Build motion-led portfolio proof',objective:'Present complete client-style pieces that demonstrate both editing judgment and motion execution.',keyConcepts:['Finished case studies are stronger proof than a montage of random tricks.','Show the problem, the approach, and the result.','Keep portfolio samples aligned with the niche being sold.','Motion work should demonstrate restraint, hierarchy, and readability as well as technical skill.'],recommendedResources:[
-{title:'The Editor’s Guide to Demo Reels & Finding Work — Film Editing Pro',url:'https://www.filmeditingpro.com/the-editors-guide-to-demo-reels-finding-work/',type:'Read',free:true},
-{title:'Ben Marriott — motion design tutorials',url:'https://www.youtube.com/@BenMarriott/videos',type:'Watch',free:true},
-{title:'Hayden Hillier-Smith — editing & storytelling',url:'https://www.haydenhilliersmith.com/watch',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–30 min. Select 3 strongest pieces. For each write: client-style brief, problem, what you edited, motion techniques used, and final deliverable. Make a 30–45s reel only after the individual pieces are ready.'},
-{id:'m3',title:'Make the 30-second audit spec',objective:'Demonstrate value by improving a small piece of a real prospect’s content without turning the exercise into unlimited free work.',keyConcepts:['A spec should be small, targeted, and clearly labeled as a proof-of-concept.','Pick one visible problem: weak hook, dead space, poor captions, weak visual explanation, or flat sound.','Show before/after so the prospect can judge the change quickly.','Private/unlisted delivery is safer when permission to republish is unclear.'],recommendedResources:[
-{title:'Hayden Hillier-Smith — editing education',url:'https://www.haydenhilliersmith.com/watch',type:'Read',free:true},
-{title:'How to Edit Videos Like an Artist, Not a Technician — Hayden Hillier-Smith',url:'https://www.youtube.com/watch?v=XIVSa3wo0JU',type:'Watch',free:true},
-{title:'This Guy Edits — creative storytelling',url:'https://thisguyedits.com/',type:'Read',free:true},
-] as Resource[],practicalExercise:'25–30 min. Choose one creator or brand with a public video. Cut exactly 30 seconds into a better version. Add dynamic captions plus one motion callout or visual explanation. Create a before/after comparison and a 3-sentence explanation of the changes. Keep it private unless reuse rights are clear.'},
-{id:'m4',title:'Pitch with personalized outreach',objective:'Send concise outreach that references the prospect’s content and offers a specific improvement rather than generic editing services.',keyConcepts:['Specific observations show the message was written for the recipient.','A short audit/spec makes the pitch concrete.','Track contacts, follow-ups, responses, and outcomes.','Consistency matters more than sending one large spam batch.'],recommendedResources:[
-{title:'George Blackman — creator teams / hiring insights',url:'https://www.georgeblackman.com/podcast',type:'Read',free:true},
-{title:'Hayden Hillier-Smith — editing education',url:'https://www.haydenhilliersmith.com/watch',type:'Read',free:true},
-{title:'Film Editing Pro — finding work',url:'https://www.filmeditingpro.com/the-editors-guide-to-demo-reels-finding-work/',type:'Read',free:true},
-] as Resource[],practicalExercise:'20–25 min. Find 10 prospects in your chosen niche. For each write one specific content observation and a 4–6 sentence pitch linking to your 30s audit/spec. Log contact date and a follow-up date. Output: 10 personalized messages + tracker.'},
-{id:'m5',title:'Package retainers and revision boundaries',objective:'Turn editing into predictable recurring work with explicit deliverables, motion scope, turnaround, and revision limits.',keyConcepts:['Retainers should define output volume and asset complexity, not vague availability.','Revision rounds should be explicit; major scope changes require a new agreement.','Additional formats, rush delivery, major animation changes, or script changes can be add-ons.','Price the complete workflow: editing, motion, audio, project management, and revisions.'],recommendedResources:[
-{title:'Freelance Video Editor Rates — Video Rate Lab',url:'https://videoratelab.com/guides/freelance-video-editor-rates/',type:'Read',free:true},
-{title:'Freelance video editor pricing guide',url:'https://www.videoeditorlist.com/blog/setting-freelance-video-editing-rates',type:'Read',free:true},
-{title:'Film Editing Pro — client chemistry',url:'https://www.filmeditingpro.com/the-3-types-of-editors/',type:'Read',free:true},
-] as Resource[],practicalExercise:'25 min. Create two sample retainers: one for 8 short-form kinetic clips/month and one for 4 long-form/explainer edits/month. Define runtime limits, motion complexity, turnaround, included revisions (maximum 2 rounds), exclusions, and add-ons. Write a scope-change clause.'},
-{id:'m6',title:'Run the client pipeline',objective:'Turn outreach and delivery into a weekly system that creates follow-up, proof, project execution, and repeat work.',keyConcepts:['A pipeline makes the next action visible for every prospect.','Follow-up should be scheduled rather than remembered.','Client retention depends on predictable delivery and communication.','A simple spreadsheet is enough at low volume.'],recommendedResources:[
-{title:'George Blackman — creator teams / hiring insights',url:'https://www.georgeblackman.com/podcast',type:'Read',free:true},
-{title:'Film Editing Pro — client relationships',url:'https://www.filmeditingpro.com/the-3-types-of-editors/',type:'Read',free:true},
-{title:'YouTube Analytics — official creator education',url:'https://creatoracademy.youtube.com/page/lesson/using-analytics?cid=viewership-bootcamp&hl=en',type:'Read',free:true},
-] as Resource[],practicalExercise:'20 min. Build a pipeline with: Prospect → Contacted → Replied → Call/Chat → Audit/Spec → Trial/Project → Active Client → Retainer → Past Client. Add your 10 prospects, one next action/date each, and one weekly review block.'},
-],checkpoint:{
-brief:'You are launching a motion-led freelance editing service. Create one portfolio-ready 30-second high-retention spec edit with dynamic captions and motion callouts, then pitch the service directly.',
-technicalConstraints:['Create one 30-second spec edit from a real creator/brand public video excerpt.','Use dynamic captions and at least 2 motion callouts.','Send the spec privately/unlisted unless you have permission to republish source material.','Pitch at least 5 target creators or brands with personalized messages.','Offer one clear service package with a defined revision limit.','Track every pitch and next action in a pipeline.'],
-freePracticeFootage:[
-{title:'EditStock — free editing practice footage',url:'https://editstock.com/collections/free-projects',type:'Practice',free:true},
-{title:'Pexels free video library',url:'https://www.pexels.com/videos/',type:'Practice',free:true},
-] as Resource[],selfGradingChecklist:['PASS — The 30-second spec clearly improves the source content through editing and motion, not decoration alone.','PASS — Portfolio/offer communicates one specific buyer problem and deliverable.','PASS — At least 5 personalized pitches are sent and logged.','PASS — Revision limits, scope, turnaround, and next actions are explicitly documented.']},
-},
-]
-export const allLessons=stages.flatMap(stage=>stage.lessons.map(lesson=>({...lesson,stageId:stage.id,stageNumber:stage.stageNumber,stageTitle:stage.title})))
+export interface Lesson {
+  id: string;
+  title: string;
+  objective: string;
+  keyConcepts: string[];
+  kdenliveTool: string;
+  recommendedResources: { title: string; channel: string; url: string }[];
+  practicalExercise: string;
+}
+
+export interface Checkpoint {
+  brief: string;
+  technicalConstraints: string[];
+  practiceFootageUrl: string;
+  practiceFootageName: string;
+  checklist: string[];
+}
+
+export interface Stage {
+  id: string;
+  stageNumber: string;
+  title: string;
+  subtitle: string;
+  goal: string;
+  output: string;
+  lessons: Lesson[];
+  checkpoint: Checkpoint;
+}
+
+export const ROADMAP_STAGES: Stage[] = [
+  {
+    id: "foundation",
+    stageNumber: "01",
+    title: "Editorial Mindset & Kdenlive Fundamentals",
+    subtitle: "Rhythm, cut motivation, proxy setup, and keyboard-first cutting",
+    goal: "Learn why and when to cut while configuring a blazing-fast Kdenlive editing environment on low-resource hardware.",
+    output: "A tight 60-second scene cut using keyboard-only workflow and proxies.",
+    lessons: [
+      {
+        id: "1-1",
+        title: "The Motivation of the Cut",
+        objective: "Understand Walter Murch's Rule of Six to ensure every cut serves meaning.",
+        keyConcepts: [
+          "Emotion over technical continuity",
+          "Eye trace and audience attention tracking",
+          "Cutting on action to disguise edits"
+        ],
+        kdenliveTool: "Razor tool ('C'), Timeline Splice, Ripple Delete ('Shift + Del')",
+        recommendedResources: [
+          {
+            title: "Learn Kdenlive in 30 Minutes - Video Editing Basics",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          },
+          {
+            title: "Cutting on Action Explained by Hollywood Editor",
+            channel: "This Guy Edits",
+            url: "https://www.youtube.com/@ThisGuyEdits"
+          }
+        ],
+        practicalExercise: "Take two angles of a person walking through a door. Cut on the exact frame the hand turns the knob."
+      },
+      {
+        id: "1-2",
+        title: "Low-Spec Optimization & Proxy Workflow",
+        objective: "Configure Kdenlive for zero timeline lag on older PCs.",
+        keyConcepts: [
+          "Proxy clips vs. raw footage decoding",
+          "Preview resolution scaling (1/2 and 1/4 timeline render)",
+          "Timeline Zone Rendering for real-time playback"
+        ],
+        kdenliveTool: "Project Settings -> Proxy Clips (Automatic Generation) & Timeline Zone Render ('Shift + I/O')",
+        recommendedResources: [
+          {
+            title: "Beginner Editing Advice - Edit Like a Pro in Kdenlive",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          }
+        ],
+        practicalExercise: "Import three 1080p clips, configure 540p proxy generation, and verify 60fps fluid scrubbing."
+      },
+      {
+        id: "1-3",
+        title: "Three-Point Editing & J/L Cuts",
+        objective: "Master seamless dialogue transitions using split audio/video cuts.",
+        keyConcepts: [
+          "J-Cut: Hearing dialogue before seeing the speaker",
+          "L-Cut: Seeing reaction while dialogue continues",
+          "Keyboard 3-point edits using In ('I'), Out ('O'), and Insert"
+        ],
+        kdenliveTool: "Audio/Video Track Decoupling, Split Audio Trimming, In/Out Monitor Marking",
+        recommendedResources: [
+          {
+            title: "Video Editing Basics - Trimming and Snapping",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          }
+        ],
+        practicalExercise: "Cut a 2-person dialogue sequence using at least three J-cuts and two L-cuts to eliminate robotic ping-pong cutting."
+      }
+    ],
+    checkpoint: {
+      brief: "Take 3 minutes of raw dialogue footage. Deliver a coherent 60-second scene cut using proxies and keyboard commands only.",
+      technicalConstraints: [
+        "Maximum runtime: 60 seconds",
+        "No visual transitions (straight cuts only)",
+        "Minimum 3 J/L cuts to hide audio splices",
+        "Zero mouse-based blade cuts (keyboard hotkeys only)"
+      ],
+      practiceFootageName: "EditStock — The Hallway Free Rushes",
+      practiceFootageUrl: "https://editstock.com/products/the-hallway",
+      checklist: [
+        "Proxies generated and verified with 0 dropped frames",
+        "Dialogue flows naturally without audible gaps or breath cuts",
+        "Every cut matches eye trace from previous frame",
+        "Rendered clean H.264 export in under 60 seconds"
+      ]
+    }
+  },
+  {
+    id: "story",
+    stageNumber: "02",
+    title: "Narrative Structure & Retention Pacing",
+    subtitle: "Hooks, pattern interrupts, micro-tension, and time remapping",
+    goal: "Shape rambling footage into structured content that retains attention using deliberate pacing and speed dynamics.",
+    output: "A 60-second narrative sequence with a 3-second hook and clear escalation.",
+    lessons: [
+      {
+        id: "2-1",
+        title: "The 3-Second Hook & Retention Graph",
+        objective: "Hook the viewer immediately and eliminate drop-off points.",
+        keyConcepts: [
+          "Information gap theory (open loops)",
+          "Removing throat-clearing and preamble",
+          "Audio-first hook design"
+        ],
+        kdenliveTool: "Timeline Markers (colored notes for pacing beats), Ripple Trim",
+        recommendedResources: [
+          {
+            title: "Why You Click and Why You Stay",
+            channel: "Hayden Hillier-Smith",
+            url: "https://www.youtube.com/@HillierSmith"
+          }
+        ],
+        practicalExercise: "Condense a 30-second rambling introduction down to a punchy 3.5-second hook that states the core stakes."
+      },
+      {
+        id: "2-2",
+        title: "Pacing Dynamics & Time Remapping",
+        objective: "Use speed ramping and beat matching to alter viewer perception of time.",
+        keyConcepts: [
+          "Linear vs. exponential speed ramps",
+          "Speeding through transition movements, slowing on impact",
+          "Cutting on rhythm without becoming a slave to music beats"
+        ],
+        kdenliveTool: "Time Remapping Effect (Speed & Slow Curves), Clip Speed change",
+        recommendedResources: [
+          {
+            title: "Speed and Slow with Time Remapping in Kdenlive",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          }
+        ],
+        practicalExercise: "Create a 15-second dynamic action sequence incorporating two smooth speed ramps to accentuate movement."
+      }
+    ],
+    checkpoint: {
+      brief: "Transform raw footage into a 60–90s story edit featuring an immediate hook, pattern interrupts, and controlled pacing.",
+      technicalConstraints: [
+        "Hook resolves within first 4 seconds",
+        "At least one speed-ramped action transition",
+        "No visual clutter or pointless memes; pacing must carry the energy"
+      ],
+      practiceFootageName: "Cinestudy Narrative Rushes",
+      practiceFootageUrl: "https://cinestudy.org/category/interactive-projects/",
+      checklist: [
+        "First 3 seconds create an open narrative question",
+        "Energy escalates in the middle third without dragging",
+        "Ending delivers a clean resolution"
+      ]
+    }
+  },
+  {
+    id: "audio",
+    stageNumber: "03",
+    title: "Audio Engineering & Sound Design",
+    subtitle: "Noise cleanup, EQ, compression, -14 LUFS, and ducking in Kdenlive",
+    goal: "Make voice recordings clean, punchy, and balanced against layered music and sound effects.",
+    output: "A fully mixed audio stem hitting broadcast and streaming loudness standards.",
+    lessons: [
+      {
+        id: "3-1",
+        title: "Dialogue Repair & Noise Suppression",
+        objective: "Clean hum, hiss, and room echo using Kdenlive's audio filters.",
+        keyConcepts: [
+          "High-pass filtering (cutting sub-80Hz rumble)",
+          "Noise gate threshold tuning to cut room tone between words",
+          "Subtle noise reduction without robotic phase artifacts"
+        ],
+        kdenliveTool: "High Pass Filter, Noise Suppressor (RNNoise/LADSPA), Gate effect",
+        recommendedResources: [
+          {
+            title: "How To Reduce Background Noise In Kdenlive",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          },
+          {
+            title: "Dialogue EQ & Cleaning Masterclass",
+            channel: "Curtis Judd",
+            url: "https://www.youtube.com/@curtisjudd"
+          }
+        ],
+        practicalExercise: "Clean a noisy voice recording, removing air conditioning hum while keeping vocal clarity natural."
+      },
+      {
+        id: "3-2",
+        title: "Audio Mixing, Ducking & LUFS Normalization",
+        objective: "Balance dialogue, music, and SFX to hit YouTube's -14 LUFS standard.",
+        keyConcepts: [
+          "Dialogue sitting between -12dB and -6dB peak",
+          "Music ducking (-18dB to -24dB beneath dialogue)",
+          "Integrated loudness vs. true peak (-1.0dB true peak safety)"
+        ],
+        kdenliveTool: "Audio Mixer panel, Volume (Keyframeable Ducking), Master Limiter, Loudness Meter",
+        recommendedResources: [
+          {
+            title: "Audio Mixing and Track Management in Kdenlive",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          }
+        ],
+        practicalExercise: "Mix a sequence with speech, background music, and 5 distinct sound effects; verify -14 LUFS export."
+      }
+    ],
+    checkpoint: {
+      brief: "Take poor raw production audio and build a pristine, 3-track mix (Dialogue, Music, Foley/SFX) adhering to web loudness specs.",
+      technicalConstraints: [
+        "Integrated loudness must hit -14 LUFS (+/- 1 LUFS)",
+        "True Peak must not exceed -1.0 dB",
+        "Dialogue must remain intelligible through all music sections"
+      ],
+      practiceFootageName: "Freesound.org & Free Production Dialogue Rushes",
+      practiceFootageUrl: "https://freesound.org/",
+      checklist: [
+        "Low-frequency rumble eliminated via High Pass filter",
+        "Music ducks smoothly when dialogue speaks",
+        "No audio clipping or distortion on master output"
+      ]
+    }
+  },
+  {
+    id: "color",
+    stageNumber: "04",
+    title: "Color Correction, Grading & Visual Polish",
+    subtitle: "Scopes, white balance, Lift/Gamma/Gain wheels, and stylized looks",
+    goal: "Correct exposure, match shots from different cameras, and apply deliberate mood grading using Kdenlive scopes.",
+    output: "A multi-shot sequence with balanced skin tones, uniform contrast, and a filmic look.",
+    lessons: [
+      {
+        id: "4-1",
+        title: "Reading Scopes & Primary Correction",
+        objective: "Normalize exposure and color balance using objective scopes rather than uncalibrated monitors.",
+        keyConcepts: [
+          "RGB Parade for balancing white and black points",
+          "Vectorscope for skin tone line calibration",
+          "Lift (Shadows), Gamma (Midtones), Gain (Highlights)"
+        ],
+        kdenliveTool: "RGB Parade, Vectorscope, Color Wheels (Lift/Gamma/Gain), White Balance effect",
+        recommendedResources: [
+          {
+            title: "Color Correction & Grading - Kdenlive Effects Tutorial",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          },
+          {
+            title: "How to Read Scopes for Color Grading",
+            channel: "Cullen Kelly",
+            url: "https://www.youtube.com/@CullenKelly"
+          }
+        ],
+        practicalExercise: "Take an underexposed, orange-tinted clip and balance black points to 0, white points to 100, and align skin tones to the vectorscope line."
+      },
+      {
+        id: "4-2",
+        title: "Stylized Looks, Bloom & Halation",
+        objective: "Create filmic depth and subtle dreamy glows using secondary effects.",
+        keyConcepts: [
+          "Soft halation and dreamy bloom on highlights",
+          "Vignettes for directing viewer focus",
+          "Applying and adjusting 3D LUTs cleanly"
+        ],
+        kdenliveTool: "Blur / Blend modes (Screen/Softlight), Apply LUT, Vignette effect",
+        recommendedResources: [
+          {
+            title: "Create Dreamy Look Effect - Kdenlive Tutorial",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          }
+        ],
+        practicalExercise: "Grade a daylight scene to create a soft filmic glow around highlights without crushing shadow details."
+      }
+    ],
+    checkpoint: {
+      brief: "Color match 3 mismatched camera clips shot under different lighting and deliver a consistent, calibrated visual grade.",
+      technicalConstraints: [
+        "All 3 clips must share identical black level and skin tone hue on vectorscope",
+        "Zero crushed shadows (< 0) or clipped whites (> 100) on RGB parade",
+        "Grade must feel cohesive and natural across cuts"
+      ],
+      practiceFootageName: "EditStock Color Practice Footage",
+      practiceFootageUrl: "https://editstock.com/collections/free-projects",
+      checklist: [
+        "RGB parade shows balanced channels across highlights and shadows",
+        "Skin tones land squarely on vectorscope indicator line",
+        "No digital banding or artifacting from over-grading"
+      ]
+    }
+  },
+  {
+    id: "motion",
+    stageNumber: "05",
+    title: "Motion Graphics, Masking & Animation",
+    subtitle: "Transform easing, rotoscope transitions, Glaxnimate vectors, and kinetic text",
+    goal: "Create high-retention 2D motion graphics, animated document highlights, and seamless masking transitions.",
+    output: "A 30-second motion-led explainer with zero live-action camera footage.",
+    lessons: [
+      {
+        id: "5-1",
+        title: "Keyframe Dynamics & Velocity Easing",
+        objective: "Eliminate robotic linear movement using smooth Bezier curves and overshoots.",
+        keyConcepts: [
+          "Linear vs. Smooth keyframe interpolation",
+          "Speed curves: fast acceleration, cushioned arrival (ease-out)",
+          "Dynamic zooms and punch-ins for emphasis"
+        ],
+        kdenliveTool: "Transform Effect (Keyframe curves: Smooth/Exponential), Zoom Keyframes",
+        recommendedResources: [
+          {
+            title: "Zoom Keyframes & Transform Motion in Kdenlive",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          },
+          {
+            title: "The Principles of Animation in Motion Design",
+            channel: "Ben Marriott",
+            url: "https://www.youtube.com/@BenMarriott"
+          }
+        ],
+        practicalExercise: "Animate an image punching in with a fast snap and cushioned stop, timed with an audio whoosh effect."
+      },
+      {
+        id: "5-2",
+        title: "Masking Transitions & Object Isolations",
+        objective: "Wipe between scenes using foreground objects and rotoscoping.",
+        keyConcepts: [
+          "Using foreground pillars, walls, or bodies as natural wipes",
+          "Rotoscoping subjects to sandwich text and graphics behind them",
+          "Split-view and multi-frame compositions"
+        ],
+        kdenliveTool: "Rotoscoping Effect, Mask Apply, Split Screen / Crop effects",
+        recommendedResources: [
+          {
+            title: "Masking & Transition Effects Editing - Kdenlive Tutorial",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          },
+          {
+            title: "Split View - Kdenlive Effects",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          }
+        ],
+        practicalExercise: "Create a seamless transition where an actor walking across the frame reveals the next scene behind their back."
+      },
+      {
+        id: "5-3",
+        title: "Vector Animation with Glaxnimate & Friction",
+        objective: "Build lightweight vector icons, arrows, and shape morphs that render instantly on low-spec PCs.",
+        keyConcepts: [
+          "Vector graphics vs. heavy raster video rendering",
+          "Animated path drawing (highlighter strokes across documents)",
+          "Exporting Lottie/SVG paths directly into Kdenlive timelines"
+        ],
+        kdenliveTool: "Kdenlive Animation Clip (Glaxnimate integration), Shape Morphing",
+        recommendedResources: [
+          {
+            title: "Shape Morphing & Animation for Kdenlive",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          }
+        ],
+        practicalExercise: "Create a digital yellow highlighter animation that underlines a newspaper sentence as voiceover reads it."
+      }
+    ],
+    checkpoint: {
+      brief: "Build a 30-second documentary or tech explainer snippet containing animated text, a document highlight, and sound-accented motion.",
+      technicalConstraints: [
+        "Zero raw camera footage allowed (graphics, documents, text, and b-roll only)",
+        "Every graphic element must use smooth easing curves (no linear stops)",
+        "Minimum 1 vector path animation (Glaxnimate highlighter or shape)",
+        "All visual movements must have corresponding subtle sound effects"
+      ],
+      practiceFootageName: "Wikimedia Commons & Library of Congress Archival Assets",
+      practiceFootageUrl: "https://commons.wikimedia.org/",
+      checklist: [
+        "Text and graphic pop-ins feel snappy with cushioned stops",
+        "Document highlight accurately tracks voiceover pacing",
+        "SFX pops and whooshes sync precisely to visual keyframes"
+      ]
+    }
+  },
+  {
+    id: "workflow",
+    stageNumber: "06",
+    title: "Production Speed, Templates & Delivery",
+    subtitle: "Project structures, subtitle automation, custom templates, and render master",
+    goal: "Double your editing speed through organized file structures, reusable presets, and clean client delivery exports.",
+    output: "A client-ready master project directory with versioned exports and automated subtitles.",
+    lessons: [
+      {
+        id: "6-1",
+        title: "Taxonomy & Asset Management",
+        objective: "Establish an unbreakable project folder structure so projects never break or lose paths.",
+        keyConcepts: [
+          "Standardized folder numbering (01_Footage, 02_Audio, 03_Graphics, 04_Exports)",
+          "Relative vs. absolute pathing in Kdenlive project files (.kdenlive)",
+          "Managing disk cache and cleaning render bloat"
+        ],
+        kdenliveTool: "Kdenlive Project Archive tool, Cache Data Manager",
+        recommendedResources: [
+          {
+            title: "Professional Project Organization for Video Editors",
+            channel: "Film Editing Pro",
+            url: "https://www.youtube.com/@FilmEditingPro"
+          }
+        ],
+        practicalExercise: "Build an automated bash folder template and test archiving a project without broken file links."
+      },
+      {
+        id: "6-2",
+        title: "Automated Subtitling & Master Encoding",
+        objective: "Generate synchronized captions and export optimized web masters.",
+        keyConcepts: [
+          "Speech-to-text automated transcription",
+          "Styling subtitles for high readability on mobile devices",
+          "Exporting high-quality, lightweight H.264/MP4 files (CRF encoding)"
+        ],
+        kdenliveTool: "Kdenlive Subtitle Tool (VOSK / Whisper speech-to-text), Render Dialog (CRF quality settings)",
+        recommendedResources: [
+          {
+            title: "Add Text & Subtitles to Videos in Kdenlive",
+            channel: "Nuxttux Creative Studio",
+            url: "https://www.youtube.com/@nuxttux"
+          }
+        ],
+        practicalExercise: "Transcribe a 60-second video automatically, format styling to yellow/white bold, and export with CRF 21."
+      }
+    ],
+    checkpoint: {
+      brief: "Package and export a full client project: structured folders, stylized captions, and two version-controlled deliverables (v1.0 and v1.1).",
+      technicalConstraints: [
+        "Project folder must contain no orphaned files outside the root directory",
+        "Subtitles must be burnt in or exported as clean SRT without spelling flaws",
+        "Delivery files must follow naming: ClientName_Project_v1.0_1080p.mp4"
+      ],
+      practiceFootageName: "Personal Portfolio Multi-Cam Session",
+      practiceFootageUrl: "https://github.com/Olaano/Video-editing-",
+      checklist: [
+        "Directory conforms strictly to standardized numerical structure",
+        "Subtitles are centered, styled, and timed to voice cadence",
+        "Exported file balances crisp 1080p quality with a compact file size"
+      ]
+    }
+  },
+  {
+    id: "money",
+    stageNumber: "07",
+    title: "Client Acquisition & The High-Ticket Money Path",
+    subtitle: "The 30s spec audit, retainer packages, revision contracts, and direct outreach",
+    goal: "Package your editing and motion skills into a compelling service that wins recurring monthly clients.",
+    output: "A live portfolio, a 30-second custom spec edit, and 10 sent outreach pitches.",
+    lessons: [
+      {
+        id: "7-1",
+        title: "The 30-Second Spec Audit Strategy",
+        objective: "Pitch creators and brands with undeniable proof rather than generic cold messages.",
+        keyConcepts: [
+          "Why generic resumes get ignored",
+          "Finding creators with weak pacing, bad audio, or static b-roll",
+          "Re-editing 30 seconds of their content with motion, sound, and retention hooks"
+        ],
+        kdenliveTool: "Side-by-side comparison sequence (Split View effect)",
+        recommendedResources: [
+          {
+            title: "How to Actually Land Video Editing Clients",
+            channel: "Finzar",
+            url: "https://www.youtube.com/@Finzar"
+          },
+          {
+            title: "How Top Creators Hire Editors",
+            channel: "Think Media",
+            url: "https://www.youtube.com/@ThinkMediaTV"
+          }
+        ],
+        practicalExercise: "Pick a creator in your target niche, download 60 seconds of their video, and build a high-retention 30-second re-edit."
+      },
+      {
+        id: "7-2",
+        title: "Packaging Retainers & Managing Revision Scope",
+        objective: "Charge flat monthly retainers and establish strict revision boundaries.",
+        keyConcepts: [
+          "Why hourly rates penalize fast editors",
+          "Retainer structure (e.g., $800/mo for 8 polished short-form videos)",
+          "The 2-revision limit rule and change-order pricing"
+        ],
+        kdenliveTool: "Exporting review cuts with timecode overlays",
+        recommendedResources: [
+          {
+            title: "The Business of Freelance Video Editing",
+            channel: "George Blackman",
+            url: "https://www.youtube.com/@GeorgeBlackman"
+          }
+        ],
+        practicalExercise: "Draft a 1-page service agreement outlining deliverable count, turnaround time (48 hours), and revision limits."
+      }
+    ],
+    checkpoint: {
+      brief: "Produce a custom 30-second spec edit for a target creator or business, package your portfolio, and execute 10 direct outreach pitches.",
+      technicalConstraints: [
+        "Spec edit must feature: dynamic hook, clean audio ducking, kinetic text, and document/motion callouts",
+        "Pitch message must be under 150 words and include a private Loom or unlisted YouTube link",
+        "Minimum 10 personalized pitches sent to real creators/brands"
+      ],
+      practiceFootageName: "Target Creator Public VOD / Podcast Clip",
+      practiceFootageUrl: "https://youtube.com",
+      checklist: [
+        "Portfolio showcases 3 distinct proof pieces (Story, Motion Explainer, Spec Edit)",
+        "Outreach pitch highlights viewer retention and time saved rather than software",
+        "Outreach tracker log created with date, contact, and follow-up schedule"
+      ]
+    }
+  }
+];
