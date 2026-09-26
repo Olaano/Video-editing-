@@ -1,13 +1,13 @@
-
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
 import type { CSSProperties } from 'react'
-import { stages, allLessons, stageProjects } from '../data/roadmap'
+import { stages, allLessons } from '../data/roadmap'
 
 type Progress = {
   done: string[]
   checkpoints: string[]
+  checkpointChecks: string[]
 }
 
 type StageStatus = 'proved' | 'ready' | 'current' | 'locked'
@@ -19,26 +19,6 @@ function getCheckpointId(stageId: string) {
   return `checkpoint-${stageId}`
 }
 
-const stageGoals: Record<string, string> = {
-  foundation: 'Build the core editing mindset and technical foundation.',
-  story: 'Learn to shape footage into clear, engaging stories.',
-  audio: 'Make dialogue, music, and sound work together cleanly.',
-  visual: 'Develop visual judgment, rhythm, and consistent image treatment.',
-  kdenlive: 'Turn editing knowledge into a confident Kdenlive workflow.',
-  professional: 'Build a repeatable workflow for real client projects.',
-  money: 'Turn editing ability into offers, clients, delivery, and income.',
-}
-
-const stageOutputs: Record<string, string> = {
-  foundation: 'A solid editing foundation and a repeatable practice habit.',
-  story: 'A short story-driven edit with intentional pacing.',
-  audio: 'A clean, balanced edit with controlled dialogue and music.',
-  visual: 'A polished edit with deliberate visual choices.',
-  kdenlive: 'A complete Kdenlive workflow you can repeat on real projects.',
-  professional: 'A client-ready process from brief to final delivery.',
-  money: 'A practical path from portfolio to paid editing work.',
-}
-
 function isYouTube(url: string) {
   return url.includes('youtube.com') || url.includes('youtu.be')
 }
@@ -46,52 +26,28 @@ function isYouTube(url: string) {
 function getYouTubeId(url: string) {
   try {
     const parsed = new URL(url)
-
-    if (parsed.hostname.includes('youtu.be')) {
-      return parsed.pathname.slice(1)
-    }
-
+    if (parsed.hostname.includes('youtu.be')) return parsed.pathname.slice(1)
     return parsed.searchParams.get('v')
   } catch {
     return null
   }
 }
 
-function getStageStatus(
-  index: number,
-  progress: Progress
-): StageStatus {
+function getStageStatus(index: number, progress: Progress): StageStatus {
   const stage = stages[index]
-
-  const completeLessons = stage.lessons.every((lesson) =>
-    progress.done.includes(lesson.id)
-  )
-
-  const proved = progress.checkpoints.includes(
-    getCheckpointId(stage.id)
-  )
+  const allComplete = stage.lessons.every((lesson) => progress.done.includes(lesson.id))
+  const proved = progress.checkpoints.includes(getCheckpointId(stage.id))
 
   if (proved) return 'proved'
-  if (completeLessons) return 'ready'
-
+  if (allComplete) return 'ready'
   if (index === 0) return 'current'
 
   const previous = stages[index - 1]
-  const previousProved = progress.checkpoints.includes(
-    getCheckpointId(previous.id)
-  )
-
-  if (previousProved) return 'current'
-
-  return 'locked'
+  return progress.checkpoints.includes(getCheckpointId(previous.id)) ? 'current' : 'locked'
 }
 
 export default function Home() {
-  const [progress, setProgress] = useState<Progress>({
-    done: [],
-    checkpoints: [],
-  })
-
+  const [progress, setProgress] = useState<Progress>({ done: [], checkpoints: [], checkpointChecks: [] })
   const [query, setQuery] = useState('')
   const [activeStage, setActiveStage] = useState('all')
   const [openLesson, setOpenLesson] = useState<string | null>(null)
@@ -100,144 +56,104 @@ export default function Home() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
-
       if (saved) {
         const parsed = JSON.parse(saved)
+        if (parsed && Array.isArray(parsed.done) && Array.isArray(parsed.checkpoints)) {
+          const validLessons = new Set(allLessons.map((lesson) => lesson.id))
+          const validCheckpoints = new Set(stages.map((stage) => getCheckpointId(stage.id)))
+          const validChecks = new Set(
+            stages.flatMap((stage) => stage.checkpoint.selfGradingChecklist.map((_, index) => `${stage.id}:${index}`))
+          )
 
-        if (
-          parsed &&
-          Array.isArray(parsed.done) &&
-          Array.isArray(parsed.checkpoints)
-        ) {
           setProgress({
-            done: parsed.done,
-            checkpoints: parsed.checkpoints,
+            done: parsed.done.filter((id: unknown): id is string => typeof id === 'string' && validLessons.has(id)),
+            checkpoints: parsed.checkpoints.filter((id: unknown): id is string => typeof id === 'string' && validCheckpoints.has(id)),
+            checkpointChecks: Array.isArray(parsed.checkpointChecks)
+              ? parsed.checkpointChecks.filter((id: unknown): id is string => typeof id === 'string' && validChecks.has(id))
+              : [],
           })
           setLoaded(true)
           return
         }
       }
 
-      // Migrate old V2 progress automatically.
       const old = localStorage.getItem(OLD_STORAGE_KEY)
-
       if (old) {
         const oldDone = JSON.parse(old)
-
         if (Array.isArray(oldDone)) {
-          const migrated = {
-            done: oldDone,
-            checkpoints: [],
-          }
-
+          const validLessons = new Set(allLessons.map((lesson) => lesson.id))
+          const migrated = { done: oldDone.filter((id: unknown): id is string => typeof id === 'string' && validLessons.has(id)), checkpoints: [], checkpointChecks: [] }
           setProgress(migrated)
-          localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(migrated)
-          )
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated))
         }
       }
     } catch {
-      // Ignore invalid localStorage data.
+      // Ignore malformed local storage.
     }
-
     setLoaded(true)
   }, [])
 
   useEffect(() => {
     if (!loaded) return
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(progress)
-    )
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
   }, [progress, loaded])
 
   const completedLessons = progress.done.length
   const totalLessons = allLessons.length
-
-  const completedStages = stages.filter((stage) =>
-    progress.checkpoints.includes(getCheckpointId(stage.id))
+  const completedStages = progress.checkpoints.filter((id) =>
+    stages.some((stage) => id === getCheckpointId(stage.id))
   ).length
-
-  const lessonPercent =
-    totalLessons === 0
-      ? 0
-      : Math.round((completedLessons / totalLessons) * 100)
-
-  const roadmapPercent =
-    stages.length === 0
-      ? 0
-      : Math.round((completedStages / stages.length) * 100)
+  const lessonPercent = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0
+  const roadmapPercent = stages.length ? Math.round((completedStages / stages.length) * 100) : 0
 
   const currentStageIndex = stages.findIndex((_, index) => {
     const status = getStageStatus(index, progress)
     return status === 'current' || status === 'ready'
   })
-
-  const currentStage =
-    currentStageIndex >= 0
-      ? stages[currentStageIndex]
-      : null
-
-  const currentStageStatus =
-    currentStageIndex >= 0
-      ? getStageStatus(currentStageIndex, progress)
-      : null
+  const currentStage = currentStageIndex >= 0 ? stages[currentStageIndex] : null
+  const currentStageStatus = currentStageIndex >= 0 ? getStageStatus(currentStageIndex, progress) : null
 
   const toggleLesson = (lessonId: string) => {
     setProgress((previous) => {
-      const alreadyDone = previous.done.includes(lessonId)
-
-      return {
-        ...previous,
-        done: alreadyDone
-          ? previous.done.filter((id) => id !== lessonId)
-          : [...previous.done, lessonId],
-      }
+      const done = previous.done.includes(lessonId)
+        ? previous.done.filter((id) => id !== lessonId)
+        : [...previous.done, lessonId]
+      return { ...previous, done }
     })
   }
 
+  const toggleCheckpointCheck = (stageId: string, checkIndex: number) => {
+    const key = `${stageId}:${checkIndex}`
+    setProgress((previous) => ({
+      ...previous,
+      checkpointChecks: previous.checkpointChecks.includes(key)
+        ? previous.checkpointChecks.filter((id) => id !== key)
+        : [...previous.checkpointChecks, key],
+    }))
+  }
+
   const proveStage = (stageId: string) => {
-    const stageIndex = stages.findIndex(
-      (stage) => stage.id === stageId
+    const index = stages.findIndex((stage) => stage.id === stageId)
+    if (index === -1) return
+    const stage = stages[index]
+    const allComplete = stage.lessons.every((lesson) => progress.done.includes(lesson.id))
+    const checksComplete = stage.checkpoint.selfGradingChecklist.every((_, checkIndex) =>
+      progress.checkpointChecks.includes(`${stageId}:${checkIndex}`)
     )
-
-    if (stageIndex === -1) return
-
-    const stage = stages[stageIndex]
-
-    const allComplete = stage.lessons.every((lesson) =>
-      progress.done.includes(lesson.id)
-    )
-
-    if (!allComplete) return
+    if (!allComplete || !checksComplete) return
 
     setProgress((previous) => ({
       ...previous,
-      checkpoints: previous.checkpoints.includes(
-        getCheckpointId(stageId)
-      )
+      checkpoints: previous.checkpoints.includes(getCheckpointId(stageId))
         ? previous.checkpoints
-        : [
-            ...previous.checkpoints,
-            getCheckpointId(stageId),
-          ],
+        : [...previous.checkpoints, getCheckpointId(stageId)],
+      checkpointChecks: previous.checkpointChecks,
     }))
   }
 
   const resetProgress = () => {
-    const confirmed = window.confirm(
-      'Reset all video-editing roadmap progress? This cannot be undone.'
-    )
-
-    if (!confirmed) return
-
-    const empty = {
-      done: [],
-      checkpoints: [],
-    }
-
+    if (!window.confirm('Reset all video-editing roadmap progress? This cannot be undone.')) return
+    const empty = { done: [], checkpoints: [], checkpointChecks: [] }
     setProgress(empty)
     localStorage.removeItem(STORAGE_KEY)
     localStorage.removeItem(OLD_STORAGE_KEY)
@@ -246,72 +162,37 @@ export default function Home() {
 
   const filteredStages = useMemo(() => {
     const normalized = query.trim().toLowerCase()
-
     return stages
       .map((stage, stageIndex) => {
         const status = getStageStatus(stageIndex, progress)
-
         const lessons = stage.lessons.filter((lesson) => {
-          if (activeStage !== 'all' && activeStage !== stage.id) {
-            return false
-          }
-
+          if (activeStage !== 'all' && activeStage !== stage.id) return false
           if (!normalized) return true
-
-          return [
-            lesson.title,
-            lesson.tag,
-            lesson.why,
-            lesson.learn,
-            lesson.practice,
-            lesson.build,
-            lesson.criteria,
-          ]
+          return [lesson.title, lesson.objective, ...lesson.keyConcepts, lesson.practicalExercise]
             .join(' ')
             .toLowerCase()
             .includes(normalized)
         })
-
-        return {
-          stage,
-          stageIndex,
-          status,
-          lessons,
-        }
+        return { stage, stageIndex, status, lessons }
       })
       .filter((item) => item.lessons.length > 0)
-  }, [query, activeStage, progress])
+  }, [activeStage, progress, query])
 
   const scrollToCurrent = () => {
     if (!currentStage) {
-      document.getElementById('roadmap')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      document.getElementById('money')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       return
     }
 
-    const allComplete = currentStage.lessons.every((lesson) =>
-      progress.done.includes(lesson.id)
-    )
-
+    const allComplete = currentStage.lessons.every((lesson) => progress.done.includes(lesson.id))
     if (allComplete && currentStageStatus === 'ready') {
-      document.getElementById(`checkpoint-${currentStage.id}`)?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      })
+      document.getElementById(`checkpoint-${currentStage.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       return
     }
 
-    const nextLesson = currentStage.lessons.find(
-      (lesson) => !progress.done.includes(lesson.id)
-    )
-
-    const target = nextLesson
-      ? `lesson-${nextLesson.id}`
-      : `stage-${currentStage.id}`
-
-    document.getElementById(target)?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    })
+    const nextLesson = currentStage.lessons.find((lesson) => !progress.done.includes(lesson.id))
+    document.getElementById(nextLesson ? `lesson-${nextLesson.id}` : `stage-${currentStage.id}`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
   return (
@@ -340,45 +221,26 @@ export default function Home() {
       <section className="hero" id="top">
         <div className="hero-copy">
           <div className="eyebrow">VIDEO EDITING · V3</div>
-
           <h1>
             Learn editing.
             <br />
-            <span>Prove it with projects.</span>
+            <span>Prove it with real work.</span>
           </h1>
-
           <p>
-            A structured path from editing fundamentals to
-            real-world freelance work. Finish a stage, prove
-            the skill, then unlock the next one.
+            A gated curriculum built around commercial editing judgment, practical exercises,
+            client-style checkpoints, and a path toward paid freelance work.
           </p>
-
           <div className="hero-actions">
-            <button
-              className="primary-button"
-              onClick={scrollToCurrent}
-            >
-              Continue roadmap →
-            </button>
-
-            <button
-              className="secondary-button"
-              onClick={resetProgress}
-            >
-              Reset progress
-            </button>
+            <button className="primary-button" onClick={scrollToCurrent}>Continue roadmap →</button>
+            <button className="secondary-button" onClick={resetProgress}>Reset progress</button>
           </div>
         </div>
 
         <div className="hero-progress">
           <div
-  className="progress-ring"
-  style={
-    {
-      '--progress': roadmapPercent,
-    } as CSSProperties
-  }
->
+            className="progress-ring"
+            style={{ '--progress': roadmapPercent } as CSSProperties}
+          >
             <div>
               <strong>{roadmapPercent}%</strong>
               <span>ROADMAP COMPLETE</span>
@@ -386,19 +248,8 @@ export default function Home() {
           </div>
 
           <div className="hero-stat-grid">
-            <div>
-              <strong>
-                {completedLessons}/{totalLessons}
-              </strong>
-              <span>LESSONS · {lessonPercent}%</span>
-            </div>
-
-            <div>
-              <strong>
-                {completedStages}/{stages.length}
-              </strong>
-              <span>STAGES PROVED</span>
-            </div>
+            <div><strong>{completedLessons}/{totalLessons}</strong><span>LESSONS · {lessonPercent}%</span></div>
+            <div><strong>{completedStages}/{stages.length}</strong><span>STAGES PROVED</span></div>
           </div>
 
           <div className="next-action">
@@ -406,9 +257,9 @@ export default function Home() {
             <strong>
               {currentStage
                 ? currentStageStatus === 'ready'
-                  ? 'Complete the stage checkpoint'
+                  ? 'Complete the client-style stage checkpoint'
                   : currentStage.lessons.find((lesson) => !progress.done.includes(lesson.id))?.title || 'Stage complete'
-                : 'Roadmap complete — build your portfolio'}
+                : 'Roadmap complete — operate your client pipeline'}
             </strong>
           </div>
         </div>
@@ -416,89 +267,43 @@ export default function Home() {
 
       <section className="stats-strip">
         <div>
-          <span>YOUR CURRENT STAGE</span>
+          <span>CURRENT STAGE</span>
           <strong>
             {currentStage
-              ? `${currentStage.title}${
-                  currentStageStatus === 'ready'
-                    ? ' · Checkpoint ready'
-                    : ''
-                }`
+              ? `${String(currentStage.stageNumber).padStart(2, '0')} · ${currentStage.title}${currentStageStatus === 'ready' ? ' · CHECKPOINT READY' : ''}`
               : 'Roadmap complete'}
           </strong>
         </div>
-
-        <div>
-          <span>PHILOSOPHY</span>
-          <strong>Learn → Practice → Build → Prove</strong>
-        </div>
-
-        <div>
-          <span>STORAGE</span>
-          <strong>Browser only · No account</strong>
-        </div>
+        <div><span>MODEL</span><strong>Learn → Practice → Build → Prove</strong></div>
+        <div><span>COURSE</span><strong>7 stages · {totalLessons} lessons</strong></div>
       </section>
 
       <section className="timeline-section" id="timeline">
         <div className="section-heading">
-          <div>
-            <span className="eyebrow">01 · TIMELINE</span>
-            <h2>Your editing journey</h2>
-          </div>
-
-          <p>
-            You don't unlock everything at once. Master the
-            current stage and prove it before moving forward.
-          </p>
+          <div><span className="eyebrow">01 · TIMELINE</span><h2>Your editing journey</h2></div>
+          <p>Each stage stays locked until its lessons are complete and its client-style checkpoint is proved.</p>
         </div>
 
         <div className="timeline">
           {stages.map((stage, index) => {
             const status = getStageStatus(index, progress)
-            const doneCount = stage.lessons.filter((lesson) =>
-              progress.done.includes(lesson.id)
-            ).length
-
+            const doneCount = stage.lessons.filter((lesson) => progress.done.includes(lesson.id)).length
             return (
               <button
                 key={stage.id}
                 className={`timeline-item ${status}`}
                 onClick={() => {
                   if (status === 'locked') return
-
-                  document
-                    .getElementById(`stage-${stage.id}`)
-                    ?.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'start',
-                    })
+                  document.getElementById(`stage-${stage.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                 }}
               >
-                <span className="timeline-number">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-
+                <span className="timeline-number">{String(stage.stageNumber).padStart(2, '0')}</span>
                 <span className="timeline-line" />
-
                 <span className="timeline-content">
                   <strong>{stage.title}</strong>
-                  <small>
-                    {doneCount}/{stage.lessons.length} lessons
-                    {status === 'proved' && ' · PROVED'}
-                    {status === 'ready' && ' · CHECKPOINT READY'}
-                    {status === 'locked' && ' · LOCKED'}
-                  </small>
+                  <small>{doneCount}/{stage.lessons.length} lessons · {status.toUpperCase()}</small>
                 </span>
-
-                <span className="timeline-status">
-                  {status === 'proved'
-                    ? '✓'
-                    : status === 'ready'
-                      ? '!'
-                      : status === 'locked'
-                        ? '🔒'
-                        : '→'}
-                </span>
+                <span className="timeline-status">{status === 'proved' ? '✓' : status === 'ready' ? '!' : status === 'locked' ? '🔒' : '→'}</span>
               </button>
             )
           })}
@@ -507,402 +312,182 @@ export default function Home() {
 
       <section className="roadmap-section" id="roadmap">
         <div className="section-heading">
-          <div>
-            <span className="eyebrow">02 · ROADMAP</span>
-            <h2>Build your editing skill</h2>
-          </div>
-
-          <p>
-            Work through the current stage one lesson at a time.
-            When every lesson is complete, the stage checkpoint
-            becomes available and unlocks the next stage after
-            you prove it.
-          </p>
+          <div><span className="eyebrow">02 · CURRICULUM</span><h2>Build commercial editing skill</h2></div>
+          <p>Every lesson has an objective, theory, a practical drill, and curated material. Every stage ends with a proof gate.</p>
         </div>
 
         <div className="toolbar">
-          <input
-            value={query}
-            onChange={(event) =>
-              setQuery(event.target.value)
-            }
-            placeholder="Search lessons..."
-          />
-
-          <select
-            value={activeStage}
-            onChange={(event) =>
-              setActiveStage(event.target.value)
-            }
-          >
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search lessons..." />
+          <select value={activeStage} onChange={(event) => setActiveStage(event.target.value)}>
             <option value="all">All stages</option>
-
-            {stages.map((stage) => (
-              <option key={stage.id} value={stage.id}>
-                {stage.title}
-              </option>
-            ))}
+            {stages.map((stage) => <option key={stage.id} value={stage.id}>{String(stage.stageNumber).padStart(2, '0')} · {stage.title}</option>)}
           </select>
         </div>
 
         <div className="roadmap">
-          {filteredStages.map(
-            ({ stage, stageIndex, status, lessons }) => {
-              const doneCount = stage.lessons.filter(
-                (lesson) => progress.done.includes(lesson.id)
-              ).length
+          {filteredStages.map(({ stage, stageIndex, status, lessons }) => {
+            const doneCount = stage.lessons.filter((lesson) => progress.done.includes(lesson.id)).length
+            const allComplete = doneCount === stage.lessons.length
+            const checksComplete = stage.checkpoint.selfGradingChecklist.every((_, checkIndex) =>
+              progress.checkpointChecks.includes(`${stage.id}:${checkIndex}`)
+            )
 
-              const allComplete =
-                doneCount === stage.lessons.length
-
-              return (
-                <article
-                  className={`stage ${status}`}
-                  id={`stage-${stage.id}`}
-                  key={stage.id}
-                >
-                  <div className="stage-header">
-                    <div className="stage-heading-left">
-                      <div className="stage-number">
-                        {String(stageIndex + 1).padStart(2, '0')}
-                      </div>
-
-                      <div>
-                        <div className="stage-label">
-                          {status === 'proved'
-                            ? 'PROVED'
-                            : status === 'ready'
-                              ? 'CHECKPOINT READY'
-                              : status === 'locked'
-                                ? 'LOCKED'
-                                : 'CURRENT'}
-                        </div>
-
-                        <h3>{stage.title}</h3>
-                        <p>{stage.subtitle}</p>
-                      </div>
-                    </div>
-
-                    <div className="stage-progress">
-                      <strong>
-                        {doneCount}/{stage.lessons.length}
-                      </strong>
-                      <span>LESSONS</span>
-                    </div>
-                  </div>
-
-                  <div className="stage-meta">
+            return (
+              <article className={`stage ${status}`} id={`stage-${stage.id}`} key={stage.id}>
+                <div className="stage-header">
+                  <div className="stage-heading-left">
+                    <div className="stage-number">{String(stage.stageNumber).padStart(2, '0')}</div>
                     <div>
-                      <span>GOAL</span>
-                      <p>{stageGoals[stage.id] || stage.subtitle}</p>
-                    </div>
-                    <div>
-                      <span>OUTPUT</span>
-                      <p>{stageOutputs[stage.id] || 'A practical proof of the stage skill.'}</p>
+                      <div className="stage-label">{status === 'proved' ? 'PROVED' : status === 'ready' ? 'CHECKPOINT READY' : status === 'locked' ? 'LOCKED' : 'CURRENT'}</div>
+                      <h3>{stage.title}</h3>
+                      <p>{stage.subtitle}</p>
                     </div>
                   </div>
+                  <div className="stage-progress"><strong>{doneCount}/{stage.lessons.length}</strong><span>LESSONS</span></div>
+                </div>
 
-                  <div className="stage-progress-bar" aria-label={`${doneCount} of ${stage.lessons.length} lessons complete`}>
-                    <div style={{ width: `${stage.lessons.length ? (doneCount / stage.lessons.length) * 100 : 0}%` }} />
+                <div className="stage-meta">
+                  <div><span>GOAL</span><p>{stage.goal}</p></div>
+                  <div><span>OUTPUT</span><p>{stage.output}</p></div>
+                </div>
+                <div className="stage-progress-bar" aria-label={`${doneCount} of ${stage.lessons.length} lessons complete`}>
+                  <div style={{ width: `${stage.lessons.length ? (doneCount / stage.lessons.length) * 100 : 0}%` }} />
+                </div>
+
+                {status === 'locked' ? (
+                  <div className="locked-message">
+                    <span>🔒</span>
+                    <div><strong>Stage locked</strong><p>Prove the previous stage to unlock this course.</p></div>
                   </div>
+                ) : (
+                  <>
+                    <div className="lesson-list">
+                      {lessons.map((lesson, index) => {
+                        const done = progress.done.includes(lesson.id)
+                        const open = openLesson === lesson.id
+                        return (
+                          <div className={`lesson ${done ? 'done' : ''} ${open ? 'open' : ''}`} id={`lesson-${lesson.id}`} key={lesson.id}>
+                            <button className="lesson-main" onClick={() => setOpenLesson(open ? null : lesson.id)}>
+                              <span
+                                className={`lesson-check ${done ? 'checked' : ''}`}
+                                onClick={(event) => { event.stopPropagation(); toggleLesson(lesson.id) }}
+                              >{done ? '✓' : ''}</span>
+                              <span className="lesson-index">{String(index + 1).padStart(2, '0')}</span>
+                              <span className="lesson-title"><strong>{lesson.title}</strong><small>Lesson</small></span>
+                              <span className="lesson-arrow">{open ? '−' : '+'}</span>
+                            </button>
 
-                  {status === 'locked' ? (
-                    <div className="locked-message">
-                      <span>🔒</span>
-                      <div>
-                        <strong>Stage locked</strong>
-                        <p>
-                          Complete and prove the previous stage
-                          to unlock this section.
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="lesson-list">
-                        {lessons.map((lesson, lessonIndex) => {
-                          const isDone = progress.done.includes(
-                            lesson.id
-                          )
-
-                          const isOpen =
-                            openLesson === lesson.id
-
-                          return (
-                            <div
-                              className={`lesson ${isDone ? 'done' : ''} ${isOpen ? 'open' : ''}`}
-                              id={`lesson-${lesson.id}`}
-                              key={lesson.id}
-                            >
-                              <button
-                                className="lesson-main"
-                                onClick={() =>
-                                  setOpenLesson(
-                                    isOpen ? null : lesson.id
-                                  )
-                                }
-                              >
-                                <span
-                                  className={`lesson-check ${isDone ? 'checked' : ''}`}
-                                  onClick={(event) => {
-                                    event.stopPropagation()
-                                    toggleLesson(lesson.id)
-                                  }}
-                                >
-                                  {isDone ? '✓' : ''}
-                                </span>
-
-                                <span className="lesson-index">
-                                  {String(
-                                    lessonIndex + 1
-                                  ).padStart(2, '0')}
-                                </span>
-
-                                <span className="lesson-title">
-                                  <strong>{lesson.title}</strong>
-                                  <small>{lesson.tag}</small>
-                                </span>
-
-                                <span className="lesson-arrow">
-                                  {isOpen ? '−' : '+'}
-                                </span>
-                              </button>
-
-                              {isOpen && (
-                                <div className="lesson-details">
-                                  <div className="detail-grid">
-                                    <div>
-                                      <span>WHY</span>
-                                      <p>{lesson.why}</p>
-                                    </div>
-
-                                    <div>
-                                      <span>LEARN</span>
-                                      <p>{lesson.learn}</p>
-                                    </div>
-
-                                    <div>
-                                      <span>PRACTICE</span>
-                                      <p>{lesson.practice}</p>
-                                    </div>
-
-                                    <div>
-                                      <span>BUILD</span>
-                                      <p>{lesson.build}</p>
-                                    </div>
-
-                                    <div>
-                                      <span>PROOF</span>
-                                      <p>{lesson.criteria}</p>
-                                    </div>
-                                  </div>
-
-                                  <div className="resources">
-                                    <div className="resource-heading">
-                                      <span>LEARNING MATERIAL</span>
-                                      <small>
-                                        {lesson.resources.length}{' '}
-                                        resource
-                                        {lesson.resources.length !==
-                                        1
-                                          ? 's'
-                                          : ''}
-                                      </small>
-                                    </div>
-
-                                    <div className="resource-grid">
-                                      {lesson.resources.map(
-                                        (resource) => {
-                                          const youtube =
-                                            isYouTube(
-                                              resource.url
-                                            )
-
-                                          const videoId =
-                                            youtube
-                                              ? getYouTubeId(
-                                                  resource.url
-                                                )
-                                              : null
-
-                                          return (
-                                            <a
-                                              href={
-                                                resource.url
-                                              }
-                                              target="_blank"
-                                              rel="noreferrer"
-                                              className="resource-card"
-                                              key={`${lesson.id}-${resource.url}`}
-                                            >
-                                              {videoId ? (
-                                                <div className="resource-thumb">
-                                                  <img
-                                                    src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-                                                    alt=""
-                                                  />
-                                                  <span>
-                                                    ▶
-                                                  </span>
-                                                </div>
-                                              ) : (
-                                                <div className="resource-icon">
-                                                  {youtube
-                                                    ? '▶'
-                                                    : resource.type ===
-                                                        'Practice'
-                                                      ? '◆'
-                                                      : '◉'}
-                                                </div>
-                                              )}
-
-                                              <div className="resource-info">
-                                                <div className="resource-type">
-                                                  {youtube
-                                                    ? 'YOUTUBE'
-                                                    : resource.type ===
-                                                        'Practice'
-                                                      ? 'PRACTICE'
-                                                      : 'READ'}
-                                                </div>
-
-                                                <strong>
-                                                  {
-                                                    resource.title
-                                                  }
-                                                </strong>
-
-                                                {resource.free && (
-                                                  <small>
-                                                    FREE · OPEN
-                                                  </small>
-                                                )}
-                                              </div>
-
-                                              <span className="resource-open">
-                                                ↗
-                                              </span>
-                                            </a>
-                                          )
-                                        }
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  <button
-                                    className={`lesson-complete ${isDone ? 'completed' : ''}`}
-                                    onClick={() =>
-                                      toggleLesson(lesson.id)
-                                    }
-                                  >
-                                    {isDone
-                                      ? '✓ Lesson completed'
-                                      : 'Mark lesson complete'}
-                                  </button>
-                                </div>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-
-                      <div className="checkpoint" id={`checkpoint-${stage.id}`}>
-                        <div className="checkpoint-head">
-                          <span className="checkpoint-label">
-                            STAGE CHECKPOINT
-                          </span>
-
-                          <h4>
-                            {status === 'proved'
-                              ? 'Stage proved ✓'
-                              : allComplete
-                                ? 'Finish with the stage project.'
-                                : 'Finish every lesson first.'}
-                          </h4>
-
-                          <p>
-                            {status === 'proved'
-                              ? 'This stage is complete. The next stage is unlocked.'
-                              : 'The project below is the practical proof for this course. Complete it, then mark the checkpoint complete.'}
-                          </p>
-                        </div>
-
-                        {(stageProjects[stage.id] || []).length > 0 && (
-                          <div className="checkpoint-projects">
-                            <div className="checkpoint-project-heading">
-                              <span>STAGE PROJECT</span>
-                              <small>APPLY WHAT YOU JUST LEARNED</small>
-                            </div>
-
-                            {(stageProjects[stage.id] || []).map((project) => (
-                              <div className="checkpoint-project" key={project.id}>
-                                <div className="checkpoint-project-top">
-                                  <span>{project.tag}</span>
-                                  <strong>{project.title}</strong>
+                            {open && (
+                              <div className="lesson-details">
+                                <div className="lesson-objective">
+                                  <span>OBJECTIVE</span>
+                                  <p>{lesson.objective}</p>
                                 </div>
 
-                                <div className="checkpoint-project-grid">
+                                <div className="detail-grid">
                                   <div>
-                                    <span>WHY</span>
-                                    <p>{project.why}</p>
+                                    <span>KEY CONCEPTS</span>
+                                    <ul className="concept-list">
+                                      {lesson.keyConcepts.map((concept) => <li key={concept}>{concept}</li>)}
+                                    </ul>
                                   </div>
                                   <div>
-                                    <span>BRIEF</span>
-                                    <p>{project.learn}</p>
-                                  </div>
-                                  <div>
-                                    <span>PRACTICE / PRODUCTION</span>
-                                    <p>{project.practice}</p>
-                                  </div>
-                                  <div>
-                                    <span>DELIVERABLE</span>
-                                    <p>{project.build}</p>
-                                  </div>
-                                  <div>
-                                    <span>PASS CONDITION</span>
-                                    <p>{project.criteria}</p>
+                                    <span>PRACTICAL EXERCISE · 15–30 MIN</span>
+                                    <p>{lesson.practicalExercise}</p>
                                   </div>
                                 </div>
 
-                                <div className="checkpoint-project-resources">
-                                  <span>PROJECT RESOURCES</span>
-                                  <div>
-                                    {project.resources.map((resource) => (
-                                      <a href={resource.url} target="_blank" rel="noreferrer" key={`${project.id}-${resource.url}`}>
-                                        {resource.title} ↗
-                                      </a>
-                                    ))}
+                                <div className="resources">
+                                  <div className="resource-heading"><span>RECOMMENDED LEARNING</span><small>{lesson.recommendedResources.length} resources</small></div>
+                                  <div className="resource-grid">
+                                    {lesson.recommendedResources.map((resource) => {
+                                      const youtube = isYouTube(resource.url)
+                                      const videoId = youtube ? getYouTubeId(resource.url) : null
+                                      return (
+                                        <a href={resource.url} target="_blank" rel="noreferrer" className="resource-card" key={`${lesson.id}-${resource.url}`}>
+                                          {videoId ? (
+                                            <div className="resource-thumb"><img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="" /><span>▶</span></div>
+                                          ) : (
+                                            <div className="resource-icon">{youtube ? '▶' : resource.type === 'Practice' ? '◆' : '◉'}</div>
+                                          )}
+                                          <div className="resource-info">
+                                            <div className="resource-type">{youtube ? 'YOUTUBE' : resource.type.toUpperCase()}</div>
+                                            <strong>{resource.title}</strong>
+                                            {resource.free && <small>FREE · OPEN</small>}
+                                          </div>
+                                          <span className="resource-open">↗</span>
+                                        </a>
+                                      )
+                                    })}
                                   </div>
                                 </div>
+
+                                <button className={`lesson-complete ${done ? 'completed' : ''}`} onClick={() => toggleLesson(lesson.id)}>
+                                  {done ? '✓ Lesson completed' : 'Mark lesson complete'}
+                                </button>
                               </div>
-                            ))}
+                            )}
                           </div>
-                        )}
+                        )
+                      })}
+                    </div>
 
-                        {status === 'proved' ? (
-                          <div className="proved-badge">
-                            ✓ PROVED
-                          </div>
-                        ) : (
-                          <button
-                            className="checkpoint-button"
-                            disabled={!allComplete}
-                            onClick={() =>
-                              proveStage(stage.id)
-                            }
-                          >
-                            {allComplete
-                              ? 'Complete checkpoint →'
-                              : `${stage.lessons.length - doneCount} lessons remaining`}
-                          </button>
-                        )}
+                    <div className="checkpoint" id={`checkpoint-${stage.id}`}>
+                      <div className="checkpoint-header">
+                        <div>
+                          <span className="checkpoint-label">STAGE {String(stage.stageNumber).padStart(2, '0')} · PROVE GATE</span>
+                          <h4>{status === 'proved' ? 'Checkpoint proved ✓' : allComplete ? 'All lessons complete — now prove the skill.' : 'Finish every lesson before the checkpoint.'}</h4>
+                        </div>
+                        {status === 'proved' ? <div className="proved-badge">✓ PROVED</div> : <button className="checkpoint-button" disabled={!allComplete} onClick={() => proveStage(stage.id)}>{allComplete && checksComplete ? 'Mark checkpoint proved →' : !allComplete ? `${stage.lessons.length - doneCount} lessons remaining` : 'Complete all 4 self-checks →'}</button>}
                       </div>
-                    </>
-                  )}
-                </article>
-              )
-            }
-          )}
+
+                      <div className="checkpoint-grid">
+                        <div className="checkpoint-box">
+                          <span>CLIENT BRIEF</span>
+                          <p>{stage.checkpoint.brief}</p>
+                        </div>
+                        <div className="checkpoint-box">
+                          <span>TECHNICAL CONSTRAINTS</span>
+                          <ul className="constraint-list">{stage.checkpoint.technicalConstraints.map((item) => <li key={item}>{item}</li>)}</ul>
+                        </div>
+                      </div>
+
+                      <div className="checkpoint-box">
+                        <span>FREE PRACTICE FOOTAGE</span>
+                        <div className="footage-grid">
+                          {stage.checkpoint.freePracticeFootage.map((resource) => (
+                            <a className="footage-link" href={resource.url} target="_blank" rel="noreferrer" key={resource.url}>
+                              <strong>{resource.title}</strong><span>OPEN FOOTAGE ↗</span>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="checkpoint-box">
+                        <span>SELF-GRADING CHECKLIST</span>
+                        <div className="checklist">
+                          {stage.checkpoint.selfGradingChecklist.map((item, checkIndex) => {
+                            const key = `${stage.id}:${checkIndex}`
+                            const checked = progress.checkpointChecks.includes(key)
+                            return (
+                              <label className={`checkpoint-check ${checked ? 'checked' : ''}`} key={item}>
+                                <input
+                                  type="checkbox"
+                                  checked={checked}
+                                  onChange={() => toggleCheckpointCheck(stage.id, checkIndex)}
+                                />
+                                <span>{item}</span>
+                              </label>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </article>
+            )
+          })}
         </div>
       </section>
 
@@ -910,29 +495,15 @@ export default function Home() {
         <div className="money-panel">
           <div>
             <span className="eyebrow">03 · MONEY PATH</span>
-            <h2>Turn editing into income.</h2>
-            <p>
-              The final stage connects your editing ability
-              with a practical freelance workflow: portfolio,
-              offers, clients, delivery, and repeat work.
-            </p>
+            <h2>Finish with a sales system.</h2>
+            <p>Stage 07 turns the editing work into a real offer, portfolio, audit/spec process, direct outreach system, retainer structure, and client pipeline.</p>
           </div>
-
-          <a href="#stage-money" className="primary-button">
-            Open money path →
-          </a>
+          <a href="#stage-money" className="primary-button">Open Stage 07 →</a>
         </div>
       </section>
 
       <footer>
-        <div>
-          <strong>NAOL · VIDEO EDITING ROADMAP</strong>
-          <span>
-            Built for learning, practice, projects, and real
-            work.
-          </span>
-        </div>
-
+        <div><strong>NAOL · VIDEO EDITING ROADMAP</strong><span>Built around craft, proof, and professional delivery.</span></div>
         <span>V3 · LOCAL PROGRESS</span>
       </footer>
     </main>
