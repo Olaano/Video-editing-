@@ -1,567 +1,511 @@
-export interface Resource {
-  title: string;
-  url: string;
-  type: string;
-  free?: boolean;
+'use client'
+
+import { useEffect, useMemo, useState } from 'react'
+import type { CSSProperties } from 'react'
+import { stages, allLessons } from '../data/roadmap'
+
+type Progress = {
+  done: string[]
+  checkpoints: string[]
+  checkpointChecks: string[]
 }
 
-export interface Lesson {
-  id: string;
-  title: string;
-  objective: string;
-  keyConcepts: string[];
-  practicalExercise: string;
-  recommendedResources: Resource[];
+type StageStatus = 'proved' | 'ready' | 'current' | 'locked'
+
+const STORAGE_KEY = 'naol-ve-v3'
+const OLD_STORAGE_KEY = 'naol-ve-v2'
+
+function getCheckpointId(stageId: string) {
+  return `checkpoint-${stageId}`
 }
 
-export interface Checkpoint {
-  brief: string;
-  technicalConstraints: string[];
-  freePracticeFootage: { title: string; url: string }[];
-  selfGradingChecklist: string[];
+function isYouTube(url: string) {
+  return url.includes('youtube.com') || url.includes('youtu.be')
 }
 
-export interface Stage {
-  id: string;
-  stageNumber: number;
-  title: string;
-  subtitle: string;
-  goal: string;
-  output: string;
-  lessons: Lesson[];
-  checkpoint: Checkpoint;
+function getYouTubeId(url: string) {
+  try {
+    const parsed = new URL(url)
+    if (parsed.hostname.includes('youtu.be')) return parsed.pathname.slice(1)
+    return parsed.searchParams.get('v')
+  } catch {
+    return null
+  }
 }
 
-export const stages: Stage[] = [
-  {
-    id: "foundation",
-    stageNumber: 1,
-    title: "Editorial Mindset & Kdenlive Fundamentals",
-    subtitle: "Rhythm, cut motivation, low-spec proxies, and keyboard-first cutting",
-    goal: "Build core editorial judgment while mastering Kdenlive navigation and low-resource proxies.",
-    output: "A tight 60-second dialogue scene cut using keyboard-only shortcuts and proxies.",
-    lessons: [
-      {
-        id: "1-1",
-        title: "The Motivation of the Cut",
-        objective: "Understand Walter Murch's Rule of Six so every cut has purpose.",
-        keyConcepts: [
-          "Emotion and story drive cuts before technical continuity",
-          "Eye trace: guiding the viewer's attention across frames",
-          "Cutting on action to conceal edits invisibly"
-        ],
-        practicalExercise: "Take two camera angles of someone opening a door and cut on the exact frame the hand turns the handle.",
-        recommendedResources: [
-          {
-            title: "Learn Kdenlive in 30 Minutes - Video Editing Basics",
-            url: "https://www.youtube.com/watch?v=zYD0b8LpiQA",
-            type: "YouTube",
-            free: true
-          },
-          {
-            title: "Cutting on Action Explained by Hollywood Editor",
-            url: "https://www.youtube.com/watch?v=5_G_E4k4c0s",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "1-2",
-        title: "Low-Spec Optimization & Proxy Workflow",
-        objective: "Configure Kdenlive to run at 60fps with zero timeline lag on older PCs.",
-        keyConcepts: [
-          "Automatic 540p/720p proxy generation for smooth scrubbing",
-          "Timeline preview scaling (1/2 and 1/4 resolution)",
-          "Timeline Zone Rendering (Shift+I / Shift+O) for real-time preview"
-        ],
-        practicalExercise: "Import three 1080p clips, generate 540p proxies, and verify stutter-free timeline playback.",
-        recommendedResources: [
-          {
-            title: "Kdenlive Tutorial for Beginners - Proxy Setup",
-            url: "https://www.youtube.com/watch?v=YnSE9qgGui4",
-            type: "YouTube",
-            free: true
-          },
-          {
-            title: "Official Kdenlive Manual — Proxy Clips Configuration",
-            url: "https://docs.kdenlive.org/en/project_and_asset_management/project_settings/proxy_clips.html",
-            type: "Documentation",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "1-3",
-        title: "Three-Point Editing & J/L Cuts",
-        objective: "Master seamless dialogue transitions using split audio/video cutting.",
-        keyConcepts: [
-          "J-Cut: Dialogue begins before cutting to the speaker",
-          "L-Cut: Visual cuts to reaction while speech carries over",
-          "Setting In (I) and Out (O) markers for keyboard-only assembly"
-        ],
-        practicalExercise: "Cut a 2-person dialogue sequence utilizing at least two J-cuts and two L-cuts to eliminate robotic back-and-forth edits.",
-        recommendedResources: [
-          {
-            title: "Trimming, Splitting, and J/L Cuts in Video Editing",
-            url: "https://www.youtube.com/watch?v=5_G_E4k4c0s",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      }
-    ],
-    checkpoint: {
-      brief: "Take 3 minutes of raw dialogue footage. Deliver a coherent 60-second scene cut using proxies and keyboard commands only.",
-      technicalConstraints: [
-        "Maximum runtime: 60 seconds",
-        "No visual transitions (straight cuts only)",
-        "Minimum 2 J-cuts and 2 L-cuts to smooth dialogue splices",
-        "No mouse-based cutting tool (keyboard hotkeys only)"
-      ],
-      freePracticeFootage: [
-        {
-          title: "EditStock — The Hallway Free Rushes",
-          url: "https://editstock.com/products/the-hallway"
-        },
-        {
-          title: "EditStock Free Project Library",
-          url: "https://editstock.com/collections/free-projects"
-        }
-      ],
-      selfGradingChecklist: [
-        "Proxies generated and verified with 0 dropped frames",
-        "Dialogue flows naturally without audible breath cuts or pops",
-        "Cuts match eye trace from previous shot",
-        "Exported clean 1080p MP4 using CRF 21"
-      ]
-    }
-  },
-  {
-    id: "story",
-    stageNumber: 2,
-    title: "Narrative Structure & Retention Pacing",
-    subtitle: "Hooks, pattern interrupts, micro-tension, and vertical layout setup",
-    goal: "Transform raw footage into structured content that retains audience attention using pacing dynamics and format adaptability.",
-    output: "A 60-second vertical or horizontal story edit with an immediate 3-second hook and clear escalation.",
-    lessons: [
-      {
-        id: "2-1",
-        title: "The 3-Second Hook & Retention Graph",
-        objective: "Hook the viewer immediately and eliminate drop-off points.",
-        keyConcepts: [
-          "Information gap theory (creating an open loop)",
-          "Eliminating preamble and throat-clearing",
-          "Leading with high-stakes visual or sound before introducing context"
-        ],
-        practicalExercise: "Take a 30-second rambling introduction and trim it down to a 3.5-second hook that compels the viewer to stay.",
-        recommendedResources: [
-          {
-            title: "Why You Click and Why You Stay - Editing Retention",
-            url: "https://www.youtube.com/watch?v=uT347dZf_4c",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "2-2",
-        title: "Kdenlive Vertical Setup & Time Remapping",
-        objective: "Configure high-retention 9:16 workspaces and execute speed ramps.",
-        keyConcepts: [
-          "Custom 9:16 vertical workspace profiles in Kdenlive for Shorts/TikTok",
-          "Time remapping curves (fast transitions into slow-motion impacts)",
-          "Using timeline colored markers to rhythmically map cut beats"
-        ],
-        practicalExercise: "Build a vertical workspace preset in Kdenlive and create a 15-second dynamic action sequence with two speed ramps.",
-        recommendedResources: [
-          {
-            title: "Create Vertical Workspace Layout - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=Qdm7rppCjz8",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      }
-    ],
-    checkpoint: {
-      brief: "Transform raw unedited footage into a 60–90s story edit featuring an immediate hook, pattern interrupts, and controlled pacing.",
-      technicalConstraints: [
-        "Core narrative hook resolves within the first 4 seconds",
-        "At least one speed ramp to accentuate motion",
-        "No decorative memes; pacing alone must maintain attention"
-      ],
-      freePracticeFootage: [
-        {
-          title: "Cinestudy Narrative Scene Rushes",
-          url: "https://cinestudy.org/category/interactive-projects/"
-        }
-      ],
-      selfGradingChecklist: [
-        "Opening 3 seconds establish clear narrative question",
-        "Pacing tightens during the middle build-up",
-        "Clean resolution with no lingering dead air"
-      ]
-    }
-  },
-  {
-    id: "audio",
-    stageNumber: 3,
-    title: "Audio Engineering & Sound Design",
-    subtitle: "Noise cleanup, vocal EQ, -14 LUFS, and dynamic music ducking",
-    goal: "Make dialogue clean, punchy, and balanced against layered music and sound effects using Kdenlive native audio filters.",
-    output: "A 3-stem mixed sequence (Dialogue, Music, SFX) hitting streaming loudness standards.",
-    lessons: [
-      {
-        id: "3-1",
-        title: "Dialogue Repair & Noise Suppression",
-        objective: "Clean hiss, air conditioning hum, and room noise in Kdenlive.",
-        keyConcepts: [
-          "High-pass filtering (cutting low-end room rumble under 80Hz)",
-          "Noise Suppressor (RNNoise/LADSPA) threshold tuning",
-          "Subtle noise reduction without creating robotic vocal artifacts"
-        ],
-        practicalExercise: "Clean a noisy voice recording, eliminating air conditioner hum while preserving vocal richness.",
-        recommendedResources: [
-          {
-            title: "Boost Your Sound Quality - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=rDGv8WEF87c",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "3-2",
-        title: "Loudness Standards & Keyframed Ducking",
-        objective: "Balance dialogue, music, and SFX to hit YouTube's -14 LUFS target.",
-        keyConcepts: [
-          "Dialogue sitting between -12dB and -6dB peak",
-          "Music ducking (-18dB to -24dB underneath spoken words)",
-          "Master limiter protection (-1.0dB True Peak safety limit)"
-        ],
-        practicalExercise: "Mix a sequence with speech, background music, and 5 distinct sound effects; verify -14 LUFS export.",
-        recommendedResources: [
-          {
-            title: "Audio Mixing and Metering in Kdenlive",
-            url: "https://www.youtube.com/watch?v=rDGv8WEF87c",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      }
-    ],
-    checkpoint: {
-      brief: "Take poor raw production audio and build a pristine 3-track mix (Dialogue, Music, Foley/SFX) meeting web loudness standards.",
-      technicalConstraints: [
-        "Integrated loudness must hit -14 LUFS (+/- 1 LUFS)",
-        "True Peak must never exceed -1.0 dB",
-        "Dialogue must remain crisp and intelligible throughout music crescendos"
-      ],
-      freePracticeFootage: [
-        {
-          title: "Freesound.org — Creative Commons Audio Assets",
-          url: "https://freesound.org/"
-        }
-      ],
-      selfGradingChecklist: [
-        "Low-frequency rumble removed with High Pass filter",
-        "Music volume ducks automatically when voice is present",
-        "Zero digital clipping or distortion on master output"
-      ]
-    }
-  },
-  {
-    id: "color",
-    stageNumber: 4,
-    title: "Color Correction, Grading & Visual Polish",
-    subtitle: "Scopes, white balance, Lift/Gamma/Gain wheels, and skin tone calibration",
-    goal: "Correct exposure, balance white balance, and match multi-camera shots using Kdenlive's RGB Parade and Vectorscope.",
-    output: "A 3-clip multi-camera sequence with uniform skin tones and consistent contrast.",
-    lessons: [
-      {
-        id: "4-1",
-        title: "Reading Scopes & Primary Correction",
-        objective: "Balance exposure and white balance using objective scopes rather than uncalibrated displays.",
-        keyConcepts: [
-          "RGB Parade: balancing shadow and highlight channels",
-          "Vectorscope: aligning skin tones along the 10 o'clock line",
-          "Lift (Shadows), Gamma (Midtones), Gain (Highlights)"
-        ],
-        practicalExercise: "Take an underexposed, orange-tinted clip and balance black points to 0, white points to 100, and align skin tones.",
-        recommendedResources: [
-          {
-            title: "Color Grading & Correction Basics - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=Gi5AETqAY48",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "4-2",
-        title: "Stylized Looks, Bloom & Secondary Grading",
-        objective: "Add filmic depth, dreamy highlight blooms, and subtle vignettes.",
-        keyConcepts: [
-          "Soft halation and highlight blooms using blend modes (Screen/Softlight)",
-          "Guiding viewer eye trace with subtle vignettes",
-          "Applying and dialing in 3D LUTs cleanly"
-        ],
-        practicalExercise: "Grade a scene to create a soft filmic glow around highlights without crushing shadow details.",
-        recommendedResources: [
-          {
-            title: "Color Correction in Kdenlive — Nuxttux Masterclass",
-            url: "https://www.youtube.com/watch?v=zKisJAr5noQ",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      }
-    ],
-    checkpoint: {
-      brief: "Color match 3 mismatched camera clips shot under different lighting and deliver a consistent, calibrated visual grade.",
-      technicalConstraints: [
-        "All 3 clips must share matching skin tone hue on vectorscope",
-        "Zero crushed shadows (< 0) or clipped whites (> 100) on RGB parade",
-        "Grade must feel cohesive across all cuts"
-      ],
-      freePracticeFootage: [
-        {
-          title: "EditStock Free Project Library",
-          url: "https://editstock.com/collections/free-projects"
-        }
-      ],
-      selfGradingChecklist: [
-        "RGB parade shows balanced channels across highlights and shadows",
-        "Skin tones land squarely on vectorscope indicator line",
-        "No digital banding or artifacting from over-grading"
-      ]
-    }
-  },
-  {
-    id: "motion",
-    stageNumber: 5,
-    title: "Motion Graphics, Masking & Animation",
-    subtitle: "Transform easing, rotoscope transitions, Glaxnimate/Friction vectors, and kinetic text",
-    goal: "Create high-retention 2D motion graphics, animated document highlights, and seamless masking transitions that run smoothly on low-spec PCs.",
-    output: "A 30-second motion-led explainer with zero live-action camera footage.",
-    lessons: [
-      {
-        id: "5-1",
-        title: "Keyframe Dynamics & Velocity Easing",
-        objective: "Eliminate stiff linear motion using smooth Bezier curves and overshoots.",
-        keyConcepts: [
-          "Linear vs. Smooth keyframe interpolation",
-          "Velocity curves: snappy acceleration with cushioned stops (ease-out)",
-          "Dynamic zooms and punch-ins synced to speech emphasis"
-        ],
-        practicalExercise: "Animate an image punching in with a fast snap and cushioned stop, timed with an audio whoosh effect.",
-        recommendedResources: [
-          {
-            title: "Masking & Transition Effects Editing - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=tHzP9kJQJeg",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "5-2",
-        title: "Masking Transitions & Object Isolations",
-        objective: "Wipe between scenes using foreground objects and rotoscoping.",
-        keyConcepts: [
-          "Using foreground pillars, people, or walls as natural wipes",
-          "Rotoscoping subjects to sandwich text and graphics behind them",
-          "Split-view and multi-frame compositions"
-        ],
-        practicalExercise: "Create a seamless transition where an actor walking across the frame reveals the next scene behind their back.",
-        recommendedResources: [
-          {
-            title: "Masking & Transition Effects Editing - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=tHzP9kJQJeg",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "5-3",
-        title: "Vector Animation with Glaxnimate & Friction",
-        objective: "Build lightweight vector icons, arrows, and shape morphs that render instantly on low-spec PCs.",
-        keyConcepts: [
-          "Vector graphics vs. heavy raster video rendering",
-          "Animated path drawing (highlighter strokes across documents)",
-          "Exporting Lottie/SVG paths directly into Kdenlive timelines"
-        ],
-        practicalExercise: "Create a digital yellow highlighter animation that underlines a newspaper sentence as voiceover reads it.",
-        recommendedResources: [
-          {
-            title: "Friction & Vector Animation Workflow for Kdenlive",
-            url: "https://www.youtube.com/watch?v=tHzP9kJQJeg",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      }
-    ],
-    checkpoint: {
-      brief: "Build a 30-second documentary or tech explainer snippet containing animated text, a document highlight, and sound-accented motion.",
-      technicalConstraints: [
-        "Zero raw camera footage allowed (graphics, documents, text, and b-roll only)",
-        "Every graphic element must use smooth easing curves (no linear stops)",
-        "Minimum 1 vector path animation (Glaxnimate highlighter or shape)",
-        "All visual movements must have corresponding subtle sound effects"
-      ],
-      freePracticeFootage: [
-        {
-          title: "Wikimedia Commons & Library of Congress Archival Assets",
-          url: "https://commons.wikimedia.org/"
-        }
-      ],
-      selfGradingChecklist: [
-        "Text and graphic pop-ins feel snappy with cushioned stops",
-        "Document highlight accurately tracks voiceover pacing",
-        "SFX pops and whooshes sync precisely to visual keyframes"
-      ]
-    }
-  },
-  {
-    id: "workflow",
-    stageNumber: 6,
-    title: "Production Speed, Templates & Delivery",
-    subtitle: "Project taxonomies, subtitle automation, custom templates, and render masters",
-    goal: "Double your editing speed through organized file structures, reusable presets, and clean client delivery exports.",
-    output: "A client-ready master project directory with versioned exports and automated subtitles.",
-    lessons: [
-      {
-        id: "6-1",
-        title: "Taxonomy & Asset Management",
-        objective: "Establish an unbreakable project folder structure so projects never lose media links.",
-        keyConcepts: [
-          "Standardized numerical folders (01_Footage, 02_Audio, 03_Graphics, 04_Exports)",
-          "Relative vs. absolute pathing in Kdenlive project files (.kdenlive)",
-          "Managing disk cache and cleaning render bloat"
-        ],
-        practicalExercise: "Build an automated project folder template and test archiving a project without broken file links.",
-        recommendedResources: [
-          {
-            title: "Kdenlive Project Organization & Workspace Settings",
-            url: "https://www.youtube.com/watch?v=zYD0b8LpiQA",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "6-2",
-        title: "Automated Subtitling & Master Encoding",
-        objective: "Generate synchronized captions and export optimized web masters.",
-        keyConcepts: [
-          "Speech-to-text automated transcription in Kdenlive",
-          "Styling subtitles for high readability on mobile devices",
-          "Exporting lightweight H.264/MP4 files using CRF encoding"
-        ],
-        practicalExercise: "Transcribe a 60-second video automatically, format styling to yellow/white bold, and export with CRF 21.",
-        recommendedResources: [
-          {
-            title: "Official Kdenlive Documentation — Subtitle Tool",
-            url: "https://docs.kdenlive.org/en/effects_and_compositions/subtitles.html",
-            type: "Documentation",
-            free: true
-          }
-        ]
-      }
-    ],
-    checkpoint: {
-      brief: "Package and export a full client project: structured folders, stylized captions, and two version-controlled deliverables (v1.0 and v1.1).",
-      technicalConstraints: [
-        "Project folder must contain zero orphaned files outside the root directory",
-        "Subtitles must be burnt in or exported as clean SRT without spelling flaws",
-        "Delivery files must follow naming: ClientName_Project_v1.0_1080p.mp4"
-      ],
-      freePracticeFootage: [
-        {
-          title: "Personal Portfolio Practice Session",
-          url: "https://github.com/Olaano/Video-editing-"
-        }
-      ],
-      selfGradingChecklist: [
-        "Directory conforms strictly to standardized numerical structure",
-        "Subtitles are centered, styled, and timed to voice cadence",
-        "Exported file balances crisp 1080p quality with a compact file size"
-      ]
-    }
-  },
-  {
-    id: "money",
-    stageNumber: 7,
-    title: "Client Acquisition & The High-Ticket Money Path",
-    subtitle: "The 30s spec audit, retainer packages, revision contracts, and direct outreach",
-    goal: "Package your editing and motion skills into a compelling service that wins recurring monthly clients.",
-    output: "A live portfolio, a 30-second custom spec edit, and 10 sent outreach pitches.",
-    lessons: [
-      {
-        id: "7-1",
-        title: "The 30-Second Spec Audit Strategy",
-        objective: "Pitch creators and brands with undeniable proof rather than generic cold messages.",
-        keyConcepts: [
-          "Why generic resumes get ignored",
-          "Finding creators with weak pacing, flat audio, or static b-roll",
-          "Re-editing 30 seconds of their content with motion, sound, and retention hooks"
-        ],
-        practicalExercise: "Pick a creator in your target niche, download 60 seconds of their video, and build a high-retention 30-second re-edit.",
-        recommendedResources: [
-          {
-            title: "How to Actually Land Video Editing Clients",
-            url: "https://www.youtube.com/watch?v=uT347dZf_4c",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      },
-      {
-        id: "7-2",
-        title: "Packaging Retainers & Managing Revision Scope",
-        objective: "Charge flat monthly retainers and establish strict revision boundaries.",
-        keyConcepts: [
-          "Why hourly rates penalize fast editors",
-          "Retainer structure (e.g., $800/mo for 8 polished short-form videos)",
-          "The 2-revision limit rule and change-order pricing"
-        ],
-        practicalExercise: "Draft a 1-page service agreement outlining deliverable count, turnaround time (48 hours), and revision limits.",
-        recommendedResources: [
-          {
-            title: "Pricing & Retainer Strategies for Video Editors",
-            url: "https://www.youtube.com/watch?v=uT347dZf_4c",
-            type: "YouTube",
-            free: true
-          }
-        ]
-      }
-    ],
-    checkpoint: {
-      brief: "Produce a custom 30-second spec edit for a target creator or business, package your portfolio, and execute 10 direct outreach pitches.",
-      technicalConstraints: [
-        "Spec edit must feature: dynamic hook, clean audio ducking, kinetic text, and document/motion callouts",
-        "Pitch message must be under 150 words and include a private unlisted video link",
-        "Minimum 10 personalized pitches sent to real creators/brands"
-      ],
-      freePracticeFootage: [
-        {
-          title: "Target Creator Public VOD / Podcast Clip",
-          url: "https://youtube.com"
-        }
-      ],
-      selfGradingChecklist: [
-        "Portfolio showcases 3 distinct proof pieces (Story, Motion Explainer, Spec Edit)",
-        "Outreach pitch highlights viewer retention and time saved rather than software",
-        "Outreach tracker log created with date, contact, and follow-up schedule"
-      ]
-    }
-  }
-];
+function getStageStatus(index: number, progress: Progress): StageStatus {
+  const stage = stages[index]
+  const allComplete = stage.lessons.every((lesson) => progress.done.includes(lesson.id))
+  const proved = progress.checkpoints.includes(getCheckpointId(stage.id))
 
-// This line fixes the line 5 import error in app/page.tsx:
-export const allLessons: Lesson[] = stages.flatMap((stage) => stage.lessons);
+  if (proved) return 'proved'
+  if (allComplete) return 'ready'
+  if (index === 0) return 'current'
 
-export default stages;
+  const previous = stages[index - 1]
+  return progress.checkpoints.includes(getCheckpointId(previous.id)) ? 'current' : 'locked'
+}
+
+export default function Home() {
+  const [progress, setProgress] = useState<Progress>({ done: [], checkpoints: [], checkpointChecks: [] })
+  const [query, setQuery] = useState('')
+  const [activeStage, setActiveStage] = useState('all')
+  const [openLesson, setOpenLesson] = useState<string | null>(null)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed && Array.isArray(parsed.done) && Array.isArray(parsed.checkpoints)) {
+          const validLessons = new Set(allLessons.map((lesson) => lesson.id))
+          const validCheckpoints = new Set(stages.map((stage) => getCheckpointId(stage.id)))
+          const validChecks = new Set(
+            stages.flatMap((stage) => stage.checkpoint.selfGradingChecklist.map((_, index) => `${stage.id}:${index}`))
+          )
+
+          setProgress({
+            done: parsed.done.filter((id: unknown): id is string => typeof id === 'string' && validLessons.has(id)),
+            checkpoints: parsed.checkpoints.filter((id: unknown): id is string => typeof id === 'string' && validCheckpoints.has(id)),
+            checkpointChecks: Array.isArray(parsed.checkpointChecks)
+              ? parsed.checkpointChecks.filter((id: unknown): id is string => typeof id === 'string' && validChecks.has(id))
+              : [],
+          })
+          setLoaded(true)
+          return
+        }
+      }
+
+      const old = localStorage.getItem(OLD_STORAGE_KEY)
+      if (old) {
+        const oldDone = JSON.parse(old)
+        if (Array.isArray(oldDone)) {
+          const validLessons = new Set(allLessons.map((lesson) => lesson.id))
+          const migrated = { done: oldDone.filter((id: unknown): id is string => typeof id === 'string' && validLessons.has(id)), checkpoints: [], checkpointChecks: [] }
+          setProgress(migrated)
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated))
+        }
+      }
+    } catch {
+      // Ignore malformed local storage.
+    }
+    setLoaded(true)
+  }, [])
+
+  useEffect(() => {
+    if (!loaded) return
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
+  }, [progress, loaded])
+
+  const completedLessons = progress.done.length
+  const totalLessons = allLessons.length
+  const completedStages = progress.checkpoints.filter((id) =>
+    stages.some((stage) => id === getCheckpointId(stage.id))
+  ).length
+  const lessonPercent = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0
+  const roadmapPercent = stages.length ? Math.round((completedStages / stages.length) * 100) : 0
+
+  const currentStageIndex = stages.findIndex((_, index) => {
+    const status = getStageStatus(index, progress)
+    return status === 'current' || status === 'ready'
+  })
+  const currentStage = currentStageIndex >= 0 ? stages[currentStageIndex] : null
+  const currentStageStatus = currentStageIndex >= 0 ? getStageStatus(currentStageIndex, progress) : null
+
+  const toggleLesson = (lessonId: string) => {
+    setProgress((previous) => {
+      const done = previous.done.includes(lessonId)
+        ? previous.done.filter((id) => id !== lessonId)
+        : [...previous.done, lessonId]
+      return { ...previous, done }
+    })
+  }
+
+  const toggleCheckpointCheck = (stageId: string, checkIndex: number) => {
+    const key = `${stageId}:${checkIndex}`
+    setProgress((previous) => ({
+      ...previous,
+      checkpointChecks: previous.checkpointChecks.includes(key)
+        ? previous.checkpointChecks.filter((id) => id !== key)
+        : [...previous.checkpointChecks, key],
+    }))
+  }
+
+  const proveStage = (stageId: string) => {
+    const index = stages.findIndex((stage) => stage.id === stageId)
+    if (index === -1) return
+    const stage = stages[index]
+    const allComplete = stage.lessons.every((lesson) => progress.done.includes(lesson.id))
+    const checksComplete = stage.checkpoint.selfGradingChecklist.every((_, checkIndex) =>
+      progress.checkpointChecks.includes(`${stageId}:${checkIndex}`)
+    )
+    if (!allComplete || !checksComplete) return
+
+    setProgress((previous) => ({
+      ...previous,
+      checkpoints: previous.checkpoints.includes(getCheckpointId(stageId))
+        ? previous.checkpoints
+        : [...previous.checkpoints, getCheckpointId(stageId)],
+      checkpointChecks: previous.checkpointChecks,
+    }))
+  }
+
+  const resetProgress = () => {
+    if (!window.confirm('Reset all video-editing roadmap progress? This cannot be undone.')) return
+    const empty = { done: [], checkpoints: [], checkpointChecks: [] }
+    setProgress(empty)
+    localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(OLD_STORAGE_KEY)
+    setOpenLesson(null)
+  }
+
+  const filteredStages = useMemo(() => {
+    const normalized = query.trim().toLowerCase()
+    return stages
+      .map((stage, stageIndex) => {
+        const status = getStageStatus(stageIndex, progress)
+        const lessons = stage.lessons.filter((lesson) => {
+          if (activeStage !== 'all' && activeStage !== stage.id) return false
+          if (!normalized) return true
+          return [lesson.title, lesson.objective, ...lesson.keyConcepts, lesson.practicalExercise]
+            .join(' ')
+            .toLowerCase()
+            .includes(normalized)
+        })
+        return { stage, stageIndex, status, lessons }
+      })
+      .filter((item) => item.lessons.length > 0)
+  }, [activeStage, progress, query])
+
+  const scrollToCurrent = () => {
+    if (!currentStage) {
+      document.getElementById('money')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+
+    const allComplete = currentStage.lessons.every((lesson) => progress.done.includes(lesson.id))
+    if (allComplete && currentStageStatus === 'ready') {
+      document.getElementById(`checkpoint-${currentStage.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
+
+    const nextLesson = currentStage.lessons.find((lesson) => !progress.done.includes(lesson.id))
+    document.getElementById(nextLesson ? `lesson-${nextLesson.id}` : `stage-${currentStage.id}`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+
+  return (
+    <main>
+      <header className="topbar">
+        <a href="#top" className="brand">
+          <span className="brand-mark">N</span>
+          <span>
+            NAOL
+            <small>VIDEO EDITING ROADMAP</small>
+          </span>
+        </a>
+
+        <nav>
+          <a href="#timeline">Timeline</a>
+          <a href="#roadmap">Roadmap</a>
+          <a href="#money">Money</a>
+        </nav>
+
+        <div className="save-status">
+          <span className="save-dot" />
+          SAVED LOCALLY
+        </div>
+      </header>
+
+      <section className="hero" id="top">
+        <div className="hero-copy">
+          <div className="eyebrow">VIDEO EDITING · V3</div>
+          <h1>
+            Learn editing.
+            <br />
+            <span>Prove it with real work.</span>
+          </h1>
+          <p>
+            A gated curriculum built around commercial editing judgment, practical exercises,
+            client-style checkpoints, and a path toward paid freelance work.
+          </p>
+          <div className="hero-actions">
+            <button className="primary-button" onClick={scrollToCurrent}>Continue roadmap →</button>
+            <button className="secondary-button" onClick={resetProgress}>Reset progress</button>
+          </div>
+        </div>
+
+        <div className="hero-progress">
+          <div
+            className="progress-ring"
+            style={{ '--progress': roadmapPercent } as CSSProperties}
+          >
+            <div>
+              <strong>{roadmapPercent}%</strong>
+              <span>ROADMAP COMPLETE</span>
+            </div>
+          </div>
+
+          <div className="hero-stat-grid">
+            <div><strong>{completedLessons}/{totalLessons}</strong><span>LESSONS · {lessonPercent}%</span></div>
+            <div><strong>{completedStages}/{stages.length}</strong><span>STAGES PROVED</span></div>
+          </div>
+
+          <div className="next-action">
+            <span>NEXT ACTION</span>
+            <strong>
+              {currentStage
+                ? currentStageStatus === 'ready'
+                  ? 'Complete the client-style stage checkpoint'
+                  : currentStage.lessons.find((lesson) => !progress.done.includes(lesson.id))?.title || 'Stage complete'
+                : 'Roadmap complete — operate your client pipeline'}
+            </strong>
+          </div>
+        </div>
+      </section>
+
+      <section className="stats-strip">
+        <div>
+          <span>CURRENT STAGE</span>
+          <strong>
+            {currentStage
+              ? `${String(currentStage.stageNumber).padStart(2, '0')} · ${currentStage.title}${currentStageStatus === 'ready' ? ' · CHECKPOINT READY' : ''}`
+              : 'Roadmap complete'}
+          </strong>
+        </div>
+        <div><span>MODEL</span><strong>Learn → Practice → Build → Prove</strong></div>
+        <div><span>COURSE</span><strong>7 stages · {totalLessons} lessons</strong></div>
+      </section>
+
+      <section className="timeline-section" id="timeline">
+        <div className="section-heading">
+          <div><span className="eyebrow">01 · TIMELINE</span><h2>Your editing journey</h2></div>
+          <p>Each stage stays locked until its lessons are complete and its client-style checkpoint is proved.</p>
+        </div>
+
+        <div className="timeline">
+          {stages.map((stage, index) => {
+            const status = getStageStatus(index, progress)
+            const doneCount = stage.lessons.filter((lesson) => progress.done.includes(lesson.id)).length
+            return (
+              <button
+                key={stage.id}
+                className={`timeline-item ${status}`}
+                onClick={() => {
+                  if (status === 'locked') return
+                  document.getElementById(`stage-${stage.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }}
+              >
+                <span className="timeline-number">{String(stage.stageNumber).padStart(2, '0')}</span>
+                <span className="timeline-line" />
+                <span className="timeline-content">
+                  <strong>{stage.title}</strong>
+                  <small>{doneCount}/{stage.lessons.length} lessons · {status.toUpperCase()}</small>
+                </span>
+                <span className="timeline-status">{status === 'proved' ? '✓' : status === 'ready' ? '!' : status === 'locked' ? '🔒' : '→'}</span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      <section className="roadmap-section" id="roadmap">
+        <div className="section-heading">
+          <div><span className="eyebrow">02 · CURRICULUM</span><h2>Build commercial editing skill</h2></div>
+          <p>Every lesson has an objective, theory, a practical drill, and curated material. Every stage ends with a proof gate.</p>
+        </div>
+
+        <div className="toolbar">
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search lessons..." />
+          <select value={activeStage} onChange={(event) => setActiveStage(event.target.value)}>
+            <option value="all">All stages</option>
+            {stages.map((stage) => <option key={stage.id} value={stage.id}>{String(stage.stageNumber).padStart(2, '0')} · {stage.title}</option>)}
+          </select>
+        </div>
+
+        <div className="roadmap">
+          {filteredStages.map(({ stage, stageIndex, status, lessons }) => {
+            const doneCount = stage.lessons.filter((lesson) => progress.done.includes(lesson.id)).length
+            const allComplete = doneCount === stage.lessons.length
+            const checksComplete = stage.checkpoint.selfGradingChecklist.every((_, checkIndex) =>
+              progress.checkpointChecks.includes(`${stage.id}:${checkIndex}`)
+            )
+
+            return (
+              <article className={`stage ${status}`} id={`stage-${stage.id}`} key={stage.id}>
+                <div className="stage-header">
+                  <div className="stage-heading-left">
+                    <div className="stage-number">{String(stage.stageNumber).padStart(2, '0')}</div>
+                    <div>
+                      <div className="stage-label">{status === 'proved' ? 'PROVED' : status === 'ready' ? 'CHECKPOINT READY' : status === 'locked' ? 'LOCKED' : 'CURRENT'}</div>
+                      <h3>{stage.title}</h3>
+                      <p>{stage.subtitle}</p>
+                    </div>
+                  </div>
+                  <div className="stage-progress"><strong>{doneCount}/{stage.lessons.length}</strong><span>LESSONS</span></div>
+                </div>
+
+                <div className="stage-meta">
+                  <div><span>GOAL</span><p>{stage.goal}</p></div>
+                  <div><span>OUTPUT</span><p>{stage.output}</p></div>
+                </div>
+                <div className="stage-progress-bar" aria-label={`${doneCount} of ${stage.lessons.length} lessons complete`}>
+                  <div style={{ width: `${stage.lessons.length ? (doneCount / stage.lessons.length) * 100 : 0}%` }} />
+                </div>
+
+                {status === 'locked' ? (
+                  <div className="locked-message">
+                    <span>🔒</span>
+                    <div><strong>Stage locked</strong><p>Prove the previous stage to unlock this course.</p></div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="lesson-list">
+                      {lessons.map((lesson, index) => {
+                        const done = progress.done.includes(lesson.id)
+                        const open = openLesson === lesson.id
+                        return (
+                          <div className={`lesson ${done ? 'done' : ''} ${open ? 'open' : ''}`} id={`lesson-${lesson.id}`} key={lesson.id}>
+                            <button className="lesson-main" onClick={() => setOpenLesson(open ? null : lesson.id)}>
+                              <span
+                                className={`lesson-check ${done ? 'checked' : ''}`}
+                                onClick={(event) => { event.stopPropagation(); toggleLesson(lesson.id) }}
+                              >{done ? '✓' : ''}</span>
+                              <span className="lesson-index">{String(index + 1).padStart(2, '0')}</span>
+                              <span className="lesson-title"><strong>{lesson.title}</strong><small>Lesson</small></span>
+                              <span className="lesson-arrow">{open ? '−' : '+'}</span>
+                            </button>
+
+                            {open && (
+                              <div className="lesson-details">
+                                <div className="lesson-objective">
+                                  <span>OBJECTIVE</span>
+                                  <p>{lesson.objective}</p>
+                                </div>
+
+                                <div className="detail-grid">
+                                  <div>
+                                    <span>KEY CONCEPTS</span>
+                                    <ul className="concept-list">
+                                      {lesson.keyConcepts.map((concept) => <li key={concept}>{concept}</li>)}
+                                    </ul>
+                                  </div>
+                                  <div>
+                                    <span>PRACTICAL EXERCISE · 15–30 MIN</span>
+                                    <p>{lesson.practicalExercise}</p>
+                                  </div>
+                                </div>
+
+                                <div className="resources">
+                                  <div className="resource-heading"><span>RECOMMENDED LEARNING</span><small>{lesson.recommendedResources.length} resources</small></div>
+                                  <div className="resource-grid">
+                                    {lesson.recommendedResources.map((resource) => {
+                                      const youtube = isYouTube(resource.url)
+                                      const videoId = youtube ? getYouTubeId(resource.url) : null
+                                      return (
+                                        <a href={resource.url} target="_blank" rel="noreferrer" className="resource-card" key={`${lesson.id}-${resource.url}`}>
+                                          {videoId ? (
+                                            <div className="resource-thumb"><img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="" /><span>▶</span></div>
+                                          ) : (
+                                            <div className="resource-icon">{youtube ? '▶' : resource.type === 'Practice' ? '◆' : '◉'}</div>
+                                          )}
+                                          <div className="resource-info">
+                                            <div className="resource-type">{youtube ? 'YOUTUBE' : resource.type.toUpperCase()}</div>
+                                            <strong>{resource.title}</strong>
+                                            {resource.free && <small>FREE · OPEN</small>}
+                                          </div>
+                                          <span className="resource-open">↗</span>
+                                        </a>
+                                      )
+                                    })}
+                                  </div>
+                                </div>
+
+                                <button className={`lesson-complete ${done ? 'completed' : ''}`} onClick={() => toggleLesson(lesson.id)}>
+                                  {done ? '✓ Lesson completed' : 'Mark lesson complete'}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    <div className="checkpoint" id={`checkpoint-${stage.id}`}>
+                      <div className="checkpoint-header">
+                        <div>
+                          <span className="checkpoint-label">STAGE {String(stage.stageNumber).padStart(2, '0')} · PROVE GATE</span>
+                          <h4>{status === 'proved' ? 'Checkpoint proved ✓' : allComplete ? 'All lessons complete — now prove the skill.' : 'Finish every lesson before the checkpoint.'}</h4>
+                        </div>
+                        {status === 'proved' ? <div className="proved-badge">✓ PROVED</div> : <button className="checkpoint-button" disabled={!allComplete} onClick={() => proveStage(stage.id)}>{allComplete && checksComplete ? 'Mark checkpoint proved →' : !allComplete ? `${stage.lessons.length - doneCount} lessons remaining` : 'Complete all 4 self-checks →'}</button>}
+                      </div>
+
+                      <div className="checkpoint-grid">
+                        <div className="checkpoint-box">
+                          <span>CLIENT BRIEF</span>
+                          <p>{stage.checkpoint.brief}</p>
+                        </div>
+                        <div className="checkpoint-box">
+                          <span>TECHNICAL CONSTRAINTS</span>
+                          <ul className="constraint-list">{stage.checkpoint.technicalConstraints.map((item) => <li key={item}>{item}</li>)}</ul>
+                        </div>
+                      </div>
+
+                      <div className="checkpoint-box">
+                        <span>FREE PRACTICE FOOTAGE</span>
+                        <div className="footage-grid">
+                          {stage.checkpoint.freePracticeFootage.map((resource) => (
+                            <a className="footage-link" href={resource.url} target="_blank" rel="noreferrer" key={resource.url}>
+                              <strong>{resource.title}</strong><span>OPEN FOOTAGE ↗</span>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="checkpoint-box">
+                        <span>SELF-GRADING CHECKLIST</span>
+                        <div className="checklist">
+                          {stage.checkpoint.selfGradingChecklist.map((item, checkIndex) => {
+                            const key = `${stage.id}:${checkIndex}`
+                            const checked = progress.checkpointChecks.includes(key)
+                            return (
+                              <label className={`checkpoint-check ${checked ? 'checked' : ''}`} key={item}>
+                                <input
+                                  type="checkbox"
+                                  checked={checked}
+                                  onChange={() => toggleCheckpointCheck(stage.id, checkIndex)}
+                                />
+                                <span>{item}</span>
+                              </label>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </article>
+            )
+          })}
+        </div>
+      </section>
+
+      <section className="money-section" id="money">
+        <div className="money-panel">
+          <div>
+            <span className="eyebrow">03 · MONEY PATH</span>
+            <h2>Finish with a sales system.</h2>
+            <p>Stage 07 turns the editing work into a real offer, portfolio, audit/spec process, direct outreach system, retainer structure, and client pipeline.</p>
+          </div>
+          <a href="#stage-money" className="primary-button">Open Stage 07 →</a>
+        </div>
+      </section>
+
+      <footer>
+        <div><strong>NAOL · VIDEO EDITING ROADMAP</strong><span>Built around craft, proof, and professional delivery.</span></div>
+        <span>V3 · LOCAL PROGRESS</span>
+      </footer>
+    </main>
+  )
+}
