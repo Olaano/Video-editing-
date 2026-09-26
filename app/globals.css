@@ -1178,3 +1178,139 @@ footer strong {
     display: grid;
   }
 }
+
+.lesson-objective {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.lesson-objective span,
+.concept-list,
+.constraint-list,
+.checklist,
+.checkpoint-box > span {
+  font: 500 10px/1.4 'DM Mono', monospace;
+  letter-spacing: .08em;
+}
+
+.lesson-objective p {
+  margin: 8px 0 0;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.concept-list,
+.constraint-list,
+.checklist {
+  margin: 9px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.concept-list li,
+.constraint-list li,
+.checklist li {
+  margin: 7px 0;
+  line-height: 1.55;
+}
+
+.checkpoint-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.checkpoint-grid {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.checkpoint-box {
+  padding: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.checkpoint-box > span {
+  color: var(--muted);
+}
+
+.checkpoint-box p {
+  margin: 9px 0 0;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.footage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.footage-link {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  background: var(--panel-2);
+}
+
+.footage-link span {
+  color: var(--muted);
+  font: 500 9px/1 'DM Mono', monospace;
+  letter-spacing: .08em;
+}
+
+@media (max-width: 700px) {
+  .checkpoint-grid,
+  .footage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .checkpoint-header {
+    flex-direction: column;
+  }
+}
+
+.checklist {
+  display: grid;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.checkpoint-check {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 9px;
+  align-items: start;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  cursor: pointer;
+}
+
+.checkpoint-check input {
+  width: 15px;
+  height: 15px;
+  margin-top: 2px;
+  accent-color: var(--accent);
+}
+
+.checkpoint-check span {
+  font: 400 12px/1.55 inherit;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.checkpoint-check.checked span {
+  color: var(--text);
+}
