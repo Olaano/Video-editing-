@@ -613,7 +613,6 @@ a {
 /* --- FIXED RESOURCE GRID & CARDS --- */
 .resource-grid {
   display: grid;
-  /* Auto-fits columns perfectly so it never squishes on small laptops */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 12px;
 }
@@ -623,10 +622,10 @@ a {
   background: var(--panel-2);
   border: 1px solid var(--border);
   display: flex;
-  align-items: stretch;
+  align-items: center; /* <--- FIXED: Changed from 'stretch' to 'center' */
   overflow: hidden;
   transition: 0.2s;
-  min-width: 0; /* CRITICAL: Prevents flex children from blowing out */
+  min-width: 0; 
 }
 
 .resource-card:hover {
@@ -636,7 +635,8 @@ a {
 
 .resource-thumb {
   width: 135px;
-  flex-shrink: 0; /* CRITICAL: Stops image from squeezing */
+  height: 76px; /* <--- FIXED: Hard height limit prevents blowout */
+  flex-shrink: 0; 
   position: relative;
   overflow: hidden;
   background: #050506;
@@ -665,7 +665,8 @@ a {
 
 .resource-icon {
   width: 90px;
-  flex-shrink: 0; /* CRITICAL: Stops icon from squeezing */
+  height: 100px; /* Aligns with min-height of card */
+  flex-shrink: 0; 
   display: grid;
   place-items: center;
   color: var(--accent);
@@ -675,7 +676,7 @@ a {
 
 .resource-info {
   flex: 1;
-  min-width: 0; /* CRITICAL: Keeps long text wrapped inside the box */
+  min-width: 0; 
   padding: 14px;
   display: grid;
   align-content: center;
@@ -691,7 +692,6 @@ a {
   font-size: 12px;
   line-height: 1.4;
   display: block;
-  /* Truncates extra-long titles cleanly */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -916,7 +916,6 @@ footer strong {
     margin-top: 18px;
   }
 
-  /* Notice: .resource-grid removed from here because the new auto-fit handles it automatically! */
   .project-grid {
     grid-template-columns: 1fr;
   }
@@ -988,6 +987,7 @@ footer strong {
 
   .resource-thumb {
     width: 105px;
+    height: 60px; /* Scaled down for mobile */
   }
 
   .checkpoint {
