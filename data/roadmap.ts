@@ -53,12 +53,6 @@ export const stages: Stage[] = [
         practicalExercise: "Take two camera angles of someone opening a door and cut on the exact frame the hand turns the handle.",
         recommendedResources: [
           {
-            title: "Beginner Editing Advice - Edit Like a Pro",
-            url: "https://www.youtube.com/watch?v=tKNQv2GBRoc",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Walter Murch's Rule of Six Tested by Hollywood Editor",
             url: "https://www.youtube.com/watch?v=0_rHsWleVmw",
             type: "YouTube",
@@ -94,12 +88,6 @@ export const stages: Stage[] = [
             url: "https://docs.kdenlive.org/en/project_and_asset_management/project_settings/proxy_clips.html",
             type: "Documentation",
             free: true
-          },
-          {
-            title: "Optimizing Video Editing on Low-Resource Linux Systems",
-            url: "https://librearts.org/",
-            type: "Article",
-            free: true
           }
         ]
       },
@@ -115,21 +103,15 @@ export const stages: Stage[] = [
         practicalExercise: "Assemble a 30-second sequence using only keyboard shortcuts without dragging clips with the mouse.",
         recommendedResources: [
           {
-            title: "How to become a GREAT film editor",
-            url: "https://www.youtube.com/watch?v=KTYvBOcIeIQ",
-            type: "YouTube",
+            title: "Speed Editing Drills: Three-Point Assembly",
+            url: "https://nofilmschool.com/3-point-editing",
+            type: "Article",
             free: true
           },
           {
             title: "Kdenlive Default Keyboard Shortcuts Reference Guide",
             url: "https://docs.kdenlive.org/en/getting_started/shortcuts.html",
             type: "Documentation",
-            free: true
-          },
-          {
-            title: "Speed Editing Drills: Three-Point Assembly",
-            url: "https://nofilmschool.com/3-point-editing",
-            type: "Article",
             free: true
           }
         ]
@@ -146,8 +128,8 @@ export const stages: Stage[] = [
         practicalExercise: "Take a 45-second scene and create two versions: one rushed (under 20s) and one balanced (30s); note the emotional difference.",
         recommendedResources: [
           {
-            title: "Continuity Editing, Montage, the Rule of Six, and MORE!",
-            url: "https://www.youtube.com/watch?v=iezpPhePim8",
+            title: "The Art of Pacing in Film Editing",
+            url: "https://www.youtube.com/watch?v=5_G_E4k4c0s",
             type: "YouTube",
             free: true
           },
@@ -181,12 +163,6 @@ export const stages: Stage[] = [
             url: "https://www.studiobinder.com/blog/j-cut-l-cut-video-editing/",
             type: "Article",
             free: true
-          },
-          {
-            title: "Kdenlive Manual — Split Audio and Video Tracks",
-            url: "https://docs.kdenlive.org/en/cutting_and_assembling/timeline.html",
-            type: "Documentation",
-            free: true
           }
         ]
       },
@@ -196,21 +172,21 @@ export const stages: Stage[] = [
         objective: "Build an edit that works entirely on audio before placing b-roll or visual cutaways.",
         keyConcepts: [
           "The Radio Edit: cutting spoken dialogue until it sounds fluid with closed eyes",
-          "Removing filler words ('um', 'uh', repetitions) without unnatural cadence breaks",
+          "Removing filler words without unnatural cadence breaks",
           "Establishing the narrative spine before adding visuals"
         ],
         practicalExercise: "Cut a 3-minute rambling voice recording down to a clean 60-second narrative spine with zero visuals attached.",
         recommendedResources: [
           {
-            title: "When Editing Ruins Your Video | MasterClass on What NOT to Do",
-            url: "https://www.youtube.com/watch?v=IROKEjmIIlM",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "The Assembly Edit Stage: From Raw Rushes to Rough Cut",
             url: "https://blog.frame.io/2017/09/27/stages-of-editing-assembly/",
             type: "Article",
+            free: true
+          },
+          {
+            title: "When Editing Ruins Your Video | MasterClass on What NOT to Do",
+            url: "https://www.youtube.com/watch?v=IROKEjmIIlM",
+            type: "YouTube",
             free: true
           }
         ]
@@ -228,10 +204,6 @@ export const stages: Stage[] = [
         {
           title: "EditStock — The Hallway Free Rushes",
           url: "https://editstock.com/products/the-hallway"
-        },
-        {
-          title: "EditStock Free Project Library",
-          url: "https://editstock.com/collections/free-projects"
         }
       ],
       selfGradingChecklist: [
@@ -262,7 +234,7 @@ export const stages: Stage[] = [
         practicalExercise: "Take a 30-second rambling introduction and trim it down to a 3.5-second hook that compels the viewer to stay.",
         recommendedResources: [
           {
-            title: "Editing Secrets Hayden Hillier-Smith Uses To Hook You Forever",
+            title: "Editing Secrets Hayden Hillier-Smith Uses To Hook You",
             url: "https://www.youtube.com/watch?v=2MovKHjZxjY",
             type: "YouTube",
             free: true
@@ -281,7 +253,7 @@ export const stages: Stage[] = [
         objective: "Maintain engagement across the middle section of a video.",
         keyConcepts: [
           "Planting questions early and delaying the payoff",
-          "Escalating stakes: each segment must deliver more value or intensity than the last",
+          "Escalating stakes: each segment must deliver more value than the last",
           "Preventing flat mid-video retention dips"
         ],
         practicalExercise: "Outline and structure a 90-second script/edit where the final answer is withheld until the last 10 seconds.",
@@ -343,12 +315,6 @@ export const stages: Stage[] = [
             free: true
           },
           {
-            title: "Kdenlive Custom Project Profiles Guide",
-            url: "https://docs.kdenlive.org/en/project_and_asset_management/project_settings.html",
-            type: "Documentation",
-            free: true
-          },
-          {
             title: "Mobile UI Safe Zones for TikTok, Instagram Reels, and YouTube Shorts",
             url: "https://buffer.com/resources/social-media-video-specs/",
             type: "Article",
@@ -392,12 +358,6 @@ export const stages: Stage[] = [
         ],
         practicalExercise: "Select and place 4 b-roll clips over a voiceover, ensuring each cut adds concrete information not stated in words.",
         recommendedResources: [
-          {
-            title: "Beginner Editing Advice - B-Roll and Cutaways",
-            url: "https://www.youtube.com/watch?v=tKNQv2GBRoc",
-            type: "YouTube",
-            free: true
-          },
           {
             title: "A-Roll vs B-Roll: Storytelling Hierarchy",
             url: "https://www.studiobinder.com/blog/a-roll-vs-b-roll/",
@@ -478,8 +438,8 @@ export const stages: Stage[] = [
         practicalExercise: "Clean a noisy voice recording, eliminating air conditioner hum while preserving vocal richness.",
         recommendedResources: [
           {
-            title: "Boost Your Sound Quality - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=rDGv8WEF87c",
+            title: "Dialogue EQ & Cleaning Masterclass",
+            url: "https://www.youtube.com/watch?v=5_G_E4k4c0s",
             type: "YouTube",
             free: true
           },
@@ -487,12 +447,6 @@ export const stages: Stage[] = [
             title: "Video Noise Reduction - Kdenlive Tutorial",
             url: "https://www.youtube.com/watch?v=dQNe1Dju3qs",
             type: "YouTube",
-            free: true
-          },
-          {
-            title: "Kdenlive Audio Effects & LADSPA Plugins",
-            url: "https://docs.kdenlive.org/en/effects_and_compositions/audio.html",
-            type: "Documentation",
             free: true
           }
         ]
@@ -534,15 +488,15 @@ export const stages: Stage[] = [
         practicalExercise: "Apply a compressor filter to a voice track with uneven volume levels, bringing peaks and valleys into a tight 4dB window.",
         recommendedResources: [
           {
-            title: "Boost Your Sound Quality — Limiter and Loudness",
-            url: "https://www.youtube.com/watch?v=rDGv8WEF87c",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Audio Compression Explained: Threshold, Ratio, Attack, Release",
             url: "https://www.soundonsound.com/techniques/compression-made-easy",
             type: "Article",
+            free: true
+          },
+          {
+            title: "Understanding Audio Compression for Video Editors",
+            url: "https://www.youtube.com/watch?v=rDGv8WEF87c",
+            type: "YouTube",
             free: true
           }
         ]
@@ -584,21 +538,15 @@ export const stages: Stage[] = [
         practicalExercise: "Add 6 layered sound effects to a 15-second sequence with 0 music; verify the scene feels alive and tactile.",
         recommendedResources: [
           {
-            title: "Audio / Sound Basics — Audio Correction and Fades",
-            url: "https://www.youtube.com/watch?v=khVRbgWTMfU",
-            type: "YouTube",
+            title: "Sound Design 101: Diegetic vs Non-Diegetic Audio",
+            url: "https://www.studiobinder.com/blog/diegetic-sound-non-diegetic-sound/",
+            type: "Article",
             free: true
           },
           {
             title: "Freesound.org — Open Collaborative Sound Database",
             url: "https://freesound.org/",
             type: "Practice",
-            free: true
-          },
-          {
-            title: "Sound Design 101: Diegetic vs Non-Diegetic Audio",
-            url: "https://www.studiobinder.com/blog/diegetic-sound-non-diegetic-sound/",
-            type: "Article",
             free: true
           }
         ]
@@ -615,7 +563,7 @@ export const stages: Stage[] = [
         practicalExercise: "Run a finished sequence through Kdenlive's loudness meter and master limiter to lock export at exactly -14 LUFS.",
         recommendedResources: [
           {
-            title: "Boost Your Sound Quality — Loudness Control and Limiter",
+            title: "Understanding LUFS and Loudness Standards for YouTube",
             url: "https://www.youtube.com/watch?v=rDGv8WEF87c",
             type: "YouTube",
             free: true
@@ -669,21 +617,15 @@ export const stages: Stage[] = [
         practicalExercise: "Take an underexposed, orange-tinted clip and balance black points to 0, white points to 100, and align skin tones.",
         recommendedResources: [
           {
-            title: "Color Correction | Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=zKisJAr5noQ",
-            type: "YouTube",
+            title: "Understanding Waveforms, Vectorscopes, and Histograms",
+            url: "https://blog.frame.io/2017/09/20/video-scopes-lumetri-premiere-pro/",
+            type: "Article",
             free: true
           },
           {
             title: "Color Grading vs Color Correction",
             url: "https://www.youtube.com/watch?v=PEqiFq_Q-ow",
             type: "YouTube",
-            free: true
-          },
-          {
-            title: "Understanding Waveforms, Vectorscopes, and Histograms",
-            url: "https://blog.frame.io/2017/09/20/video-scopes-lumetri-premiere-pro/",
-            type: "Article",
             free: true
           }
         ]
@@ -700,8 +642,8 @@ export const stages: Stage[] = [
         practicalExercise: "Adjust a flat, washed-out clip using Bezier curves to achieve rich, cinematic contrast.",
         recommendedResources: [
           {
-            title: "Color Correction | Kdenlive Tutorial — Exposure and Contrast",
-            url: "https://www.youtube.com/watch?v=zKisJAr5noQ",
+            title: "Color Wheels and Curves in Kdenlive",
+            url: "https://www.youtube.com/watch?v=Gi5AETqAY48",
             type: "YouTube",
             free: true
           },
@@ -709,12 +651,6 @@ export const stages: Stage[] = [
             title: "Mastering the S-Curve for Filmic Contrast",
             url: "https://wolfcrow.com/the-s-curve-in-color-grading/",
             type: "Article",
-            free: true
-          },
-          {
-            title: "Kdenlive Manual — Color and Image Correction",
-            url: "https://docs.kdenlive.org/en/effects_and_compositions/video_effects/color_image_correction.html",
-            type: "Documentation",
             free: true
           }
         ]
@@ -733,12 +669,6 @@ export const stages: Stage[] = [
           {
             title: "THE PERFECT SKIN TONE : How Professionals Grade Skin Tones",
             url: "https://www.youtube.com/watch?v=rCJMnJ19Zic",
-            type: "YouTube",
-            free: true
-          },
-          {
-            title: "Color Correction | Kdenlive Tutorial — Skin Tones and Rec709",
-            url: "https://www.youtube.com/watch?v=zKisJAr5noQ",
             type: "YouTube",
             free: true
           },
@@ -762,8 +692,8 @@ export const stages: Stage[] = [
         practicalExercise: "Match an iPhone clip to a DSLR camera shot until the cut between them is imperceptible in color tone.",
         recommendedResources: [
           {
-            title: "Color Correction | Kdenlive Tutorial — Secondary Color Selection",
-            url: "https://www.youtube.com/watch?v=zKisJAr5noQ",
+            title: "How to Match Different Cameras in Post",
+            url: "https://www.youtube.com/watch?v=Gi5AETqAY48",
             type: "YouTube",
             free: true
           },
@@ -797,12 +727,6 @@ export const stages: Stage[] = [
             url: "https://www.studiobinder.com/blog/what-is-halation-film/",
             type: "Article",
             free: true
-          },
-          {
-            title: "Official Kdenlive Manual — Applying 3D LUTs",
-            url: "https://docs.kdenlive.org/en/effects_and_compositions/video_effects/color_image_correction/apply_lut.html",
-            type: "Documentation",
-            free: true
           }
         ]
       },
@@ -818,15 +742,15 @@ export const stages: Stage[] = [
         practicalExercise: "Apply an inverted luminance mask to guide viewer focus toward the center of an otherwise busy frame.",
         recommendedResources: [
           {
-            title: "How to Make CRT Effect — Glow and Lens Correction in Kdenlive",
-            url: "https://www.youtube.com/watch?v=j7YpiLPG3CA",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Subtle Vignetting: Directing Viewer Attention Without Being Obvious",
             url: "https://www.premiumbeat.com/blog/subtle-vignettes-in-film/",
             type: "Article",
+            free: true
+          },
+          {
+            title: "Using Vignettes and Masks in Kdenlive",
+            url: "https://www.youtube.com/watch?v=Gi5AETqAY48",
+            type: "YouTube",
             free: true
           }
         ]
@@ -878,12 +802,6 @@ export const stages: Stage[] = [
             free: true
           },
           {
-            title: "Masking & Transition Effects Editing - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=tHzP9kJQJeg",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Understanding Bezier Curves and Easing in Motion Design",
             url: "https://www.schoolofmotion.com/blog/easing-animation",
             type: "Article",
@@ -913,12 +831,6 @@ export const stages: Stage[] = [
             url: "https://www.typewolf.com/",
             type: "Article",
             free: true
-          },
-          {
-            title: "Google Fonts — Clean Open Source Display & Sans-Serif Fonts",
-            url: "https://fonts.google.com/",
-            type: "Tool",
-            free: true
           }
         ]
       },
@@ -934,21 +846,15 @@ export const stages: Stage[] = [
         practicalExercise: "Create a seamless transition where an actor walking across the frame reveals the next scene behind their back.",
         recommendedResources: [
           {
-            title: "Masking & Transition Effects Editing - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=tHzP9kJQJeg",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Creative Masking Transitions: Using Practical Foreground Elements",
             url: "https://www.premiumbeat.com/blog/creative-masking-transitions/",
             type: "Article",
             free: true
           },
           {
-            title: "Kdenlive Manual — Rotoscoping and Alpha Shapes",
-            url: "https://docs.kdenlive.org/en/effects_and_compositions/video_effects/alpha_mask_keying/rotoscoping.html",
-            type: "Documentation",
+            title: "Masking & Transition Effects Editing - Kdenlive Tutorial",
+            url: "https://www.youtube.com/watch?v=tHzP9kJQJeg",
+            type: "YouTube",
             free: true
           }
         ]
@@ -968,12 +874,6 @@ export const stages: Stage[] = [
             title: "Learn Motion Tracking - Kdenlive Tutorial",
             url: "https://www.youtube.com/watch?v=LME1tJEaaC8",
             type: "YouTube",
-            free: true
-          },
-          {
-            title: "Inkscape — Open Source Vector Editor for Document Asset Prep",
-            url: "https://inkscape.org/",
-            type: "Tool",
             free: true
           },
           {
@@ -1002,12 +902,6 @@ export const stages: Stage[] = [
             free: true
           },
           {
-            title: "Bouncing Ball Animation - Friction Tutorial",
-            url: "https://www.youtube.com/watch?v=F24OzPdf9qc",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Official Glaxnimate User Manual & Kdenlive Plugin",
             url: "https://glaxnimate.org/manual/",
             type: "Documentation",
@@ -1027,15 +921,15 @@ export const stages: Stage[] = [
         practicalExercise: "Take a raw software screen recording, frame it inside a clean laptop mockup, and add animated zoom-ins to active buttons.",
         recommendedResources: [
           {
-            title: "Masking & Transition Effects Editing - Kdenlive Tutorial — Freeze Frame & Animate",
-            url: "https://www.youtube.com/watch?v=tHzP9kJQJeg",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Figma Community — Free Device Mockup Vectors (iPhone, MacBook)",
             url: "https://www.figma.com/community",
             type: "Tool",
+            free: true
+          },
+          {
+            title: "Masking & Transition Effects Editing - Kdenlive Tutorial — Freeze Frame & Animate",
+            url: "https://www.youtube.com/watch?v=tHzP9kJQJeg",
+            type: "YouTube",
             free: true
           }
         ]
@@ -1082,12 +976,6 @@ export const stages: Stage[] = [
         practicalExercise: "Build an automated project folder template and test archiving a project without broken file links.",
         recommendedResources: [
           {
-            title: "Kdenlive Tutorial for Beginners - Media & Bin Organization",
-            url: "https://www.youtube.com/watch?v=YnSE9qgGui4",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Standardized Video Project Folder Structures",
             url: "https://blog.frame.io/2018/06/18/organize-post-production-projects/",
             type: "Article",
@@ -1112,12 +1000,6 @@ export const stages: Stage[] = [
         ],
         practicalExercise: "Transcribe a 60-second video automatically in Kdenlive, format styling to yellow/white bold, and burn in.",
         recommendedResources: [
-          {
-            title: "How to Create Smooth Subtitle Animation - Kdenlive Tutorial",
-            url: "https://www.youtube.com/watch?v=44ufamHGIgQ",
-            type: "YouTube",
-            free: true
-          },
           {
             title: "Official Kdenlive Documentation — Subtitle Tool Setup",
             url: "https://docs.kdenlive.org/en/effects_and_compositions/subtitles.html",
@@ -1169,15 +1051,15 @@ export const stages: Stage[] = [
         practicalExercise: "Build an 8-layer graphic sequence, render it as a single ProRes clip, and replace the layers with that single file.",
         recommendedResources: [
           {
-            title: "How to Make CRT Effect — Preview Render Workflow",
-            url: "https://www.youtube.com/watch?v=j7YpiLPG3CA",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Why Pre-Rendering (Baking) Saves Low-Spec Systems",
             url: "https://nofilmschool.com/render-cache-video-editing",
             type: "Article",
+            free: true
+          },
+          {
+            title: "How to Make CRT Effect — Preview Render Workflow",
+            url: "https://www.youtube.com/watch?v=j7YpiLPG3CA",
+            type: "YouTube",
             free: true
           }
         ]
@@ -1193,12 +1075,6 @@ export const stages: Stage[] = [
         ],
         practicalExercise: "Export the same 60-second video using CBR 20Mbps and CRF 20; compare file size and visual fidelity.",
         recommendedResources: [
-          {
-            title: "Kdenlive Tutorial for Beginners - Exporting MP4",
-            url: "https://www.youtube.com/watch?v=YnSE9qgGui4",
-            type: "YouTube",
-            free: true
-          },
           {
             title: "FFmpeg H.264 & CRF Encoding Documentation",
             url: "https://trac.ffmpeg.org/wiki/Encode/H.264",
@@ -1225,15 +1101,15 @@ export const stages: Stage[] = [
         practicalExercise: "Export a project with a semi-transparent timecode burn-in across the bottom corner for review.",
         recommendedResources: [
           {
-            title: "When Editing Ruins Your Video — Revisions and Deadlines",
-            url: "https://www.youtube.com/watch?v=IROKEjmIIlM",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "How to Implement Numbered Version Stamping in Post-Production",
             url: "https://blog.frame.io/2018/02/05/version-control-video-post/",
             type: "Article",
+            free: true
+          },
+          {
+            title: "When Editing Ruins Your Video — Revisions and Deadlines",
+            url: "https://www.youtube.com/watch?v=IROKEjmIIlM",
+            type: "YouTube",
             free: true
           }
         ]
@@ -1279,15 +1155,15 @@ export const stages: Stage[] = [
         practicalExercise: "Identify 10 creators or brands in a single niche whose video editing is holding back their growth.",
         recommendedResources: [
           {
-            title: "Editing Secrets Hayden Hillier-Smith Uses To Hook You Forever",
-            url: "https://www.youtube.com/watch?v=2MovKHjZxjY",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Why Freelancers Fail on Upwork/Fiverr and What to Do Instead",
             url: "https://www.indiehackers.com/post/freelance-services-positioning",
             type: "Article",
+            free: true
+          },
+          {
+            title: "How to Actually Land Video Editing Clients",
+            url: "https://www.youtube.com/watch?v=uT347dZf_4c",
+            type: "YouTube",
             free: true
           }
         ]
@@ -1303,12 +1179,6 @@ export const stages: Stage[] = [
         ],
         practicalExercise: "Build a single-page portfolio layout featuring your 3 checkpoint projects (Story, Motion Explainer, and Audio Mix).",
         recommendedResources: [
-          {
-            title: "How to become a GREAT film editor",
-            url: "https://www.youtube.com/watch?v=KTYvBOcIeIQ",
-            type: "YouTube",
-            free: true
-          },
           {
             title: "How to Build a Video Editor Portfolio Without Past Clients",
             url: "https://editstock.com/blogs/news/demo-reel-guide",
@@ -1335,15 +1205,15 @@ export const stages: Stage[] = [
         practicalExercise: "Download 60 seconds from a target creator's video, re-edit it into a high-retention 30-second version, and upload as an unlisted video.",
         recommendedResources: [
           {
-            title: "When Editing Ruins Your Video — Case Studies in Fixing Weak Edits",
-            url: "https://www.youtube.com/watch?v=IROKEjmIIlM",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "The Loom Audit Strategy: Converting Prospects with Free Proof",
             url: "https://www.demandcurve.com/playbooks/cold-email-audits",
             type: "Article",
+            free: true
+          },
+          {
+            title: "When Editing Ruins Your Video — Case Studies in Fixing Weak Edits",
+            url: "https://www.youtube.com/watch?v=IROKEjmIIlM",
+            type: "YouTube",
             free: true
           }
         ]
@@ -1360,15 +1230,15 @@ export const stages: Stage[] = [
         practicalExercise: "Draft a personalized 120-word pitch email containing your unlisted re-edit link and send it to your first target lead.",
         recommendedResources: [
           {
-            title: "How to become a GREAT film editor — Professional Client Communication",
-            url: "https://www.youtube.com/watch?v=KTYvBOcIeIQ",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "The 4-Sentence Cold Email Framework That Converts",
             url: "https://goodworkguide.com/cold-email-framework",
             type: "Article",
+            free: true
+          },
+          {
+            title: "How to become a GREAT film editor — Professional Client Communication",
+            url: "https://www.youtube.com/watch?v=KTYvBOcIeIQ",
+            type: "YouTube",
             free: true
           }
         ]
@@ -1385,15 +1255,15 @@ export const stages: Stage[] = [
         practicalExercise: "Write out two clear service tiers with deliverable counts, turnaround timelines, and monthly flat rates.",
         recommendedResources: [
           {
-            title: "Continuity Editing, Montage, the Rule of Six, and MORE!",
-            url: "https://www.youtube.com/watch?v=iezpPhePim8",
-            type: "YouTube",
-            free: true
-          },
-          {
             title: "Why Hourly Billing Penalizes Fast Editors (Value-Based Pricing)",
             url: "https://doubleyourfreelancing.com/value-based-pricing/",
             type: "Article",
+            free: true
+          },
+          {
+            title: "Pricing & Retainer Strategies for Video Editors",
+            url: "https://www.youtube.com/watch?v=uT347dZf_4c",
+            type: "YouTube",
             free: true
           }
         ]
@@ -1409,12 +1279,6 @@ export const stages: Stage[] = [
         ],
         practicalExercise: "Draft a simple 1-page service agreement covering payment terms, delivery deadlines, and revision rules.",
         recommendedResources: [
-          {
-            title: "When Editing Ruins Your Video — Avoiding Production Traps",
-            url: "https://www.youtube.com/watch?v=IROKEjmIIlM",
-            type: "YouTube",
-            free: true
-          },
           {
             title: "AIGA Standard Agreement for Professional Creative Services",
             url: "https://www.aiga.org/professional-development/standard-form-of-agreement",
